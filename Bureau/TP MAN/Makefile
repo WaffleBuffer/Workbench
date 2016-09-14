@@ -3,8 +3,11 @@ CC     = gcc
 CFLAGS = -Wall -W -std=c99 -pedantic
 LIBS   =
 
+# Rajouter le nom des executables apres '=', separes par un espace.
+# Si une ligne est pleine, rajouter '\' en fin de ligne et passer a la suivante.
+
 # pour compiler avec bor-util.c
-EXECSUTIL = triosig
+EXECSUTIL = 
 
 .c.o :
 	$(CC) -c $(CFLAGS) $*.c
