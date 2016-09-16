@@ -7,7 +7,7 @@ LIBS   =
 # Si une ligne est pleine, rajouter '\' en fin de ligne et passer a la suivante.
 
 # pour compiler avec bor-util.c
-EXECSUTIL = 
+EXECSUTIL = Bubbles
 
 .c.o :
 	$(CC) -c $(CFLAGS) $*.c
