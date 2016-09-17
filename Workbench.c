@@ -1,7 +1,8 @@
 #include <stdio.h> // printf
 #include <stdlib.h>
-#include <time.h>
+#include <time.h> //clock_t
 #include <string.h> // strcmp
+#include <unistd.h> // sleep
 
 // Table sizes to test
 #define size1  100
@@ -19,8 +20,6 @@
 #define size13 800000
 #define size14 900000
 #define MAX    1000000
-
-typedef int TABLEAU[MAX];
 
 // All the sizes to test
 const size_t sizesTab[15] = {size1, size2, size3, size4, size5, size6,
@@ -40,8 +39,10 @@ const char* stack 		  = "Stack";
 // All the available algorithims
 const char* algos[8];
 
-// The chosen algorithim
+// The name of the chosen algorithim
 const char* chosenAlgo;
+// The pointer to the chosen algorithim
+void (*algo)(int tab[], const size_t tabSize);
 
 //int * tab = (int *) malloc (1 000 000 * sizeof(int));
 //		(int*) calloc (1 000 000, sizeof(int));  = malloc + memset
@@ -50,7 +51,7 @@ const char* chosenAlgo;
 /*
 @author : Remi SEGRETAIN
 */
-void genereTab (TABLEAU tab, const size_t size) {
+void genereTab (int tab[], const size_t size) {
 	srand(time(0));
 	for (size_t i = 0; i < size; ++i) {
 		tab[i] = (unsigned int) rand() % 50;
@@ -85,6 +86,60 @@ void initAlgos(void) {
 	algos[7] = stack;
 }
 
+void testTime(int tab[], const size_t tabSize) {
+	sleep(3);
+}
+
+void launchTest(const size_t sizeToTest) {
+	int tab[sizeToTest];
+	genereTab(tab, sizeToTest);
+	
+	clock_t begin = clock();
+	algo(tab, sizeToTest);
+	clock_t end = clock();
+	
+	double time = ((double) (end - begin) / CLOCKS_PER_SEC);
+}
+
+void chooseAlgo(char* arg) {
+	if (strcmp(arg, bubbles) == 0) {
+		chosenAlgo = bubbles;
+		algo = testTime;
+	}
+	else if (strcmp(arg, sequentialIns) == 0) {
+		chosenAlgo = sequentialIns;
+		algo = testTime;
+	}
+	else if (strcmp(arg, dichoIns) == 0) {
+		chosenAlgo = dichoIns;
+		algo = testTime;
+	}
+	else if (strcmp(arg, selecPerm) == 0) {
+		chosenAlgo = selecPerm;
+		algo = testTime;
+	}
+	else if (strcmp(arg, fusion) == 0) {
+		chosenAlgo = fusion;
+		algo = testTime;
+	}
+	else if (strcmp(arg, findTrees) == 0) {
+		chosenAlgo = findTrees;
+		algo = testTime;
+	}
+	else if (strcmp(arg, stack) == 0) {
+		chosenAlgo = stack;
+		algo = testTime;
+	}
+	else if (strcmp(arg, quickSort) == 0) {
+		chosenAlgo = quickSort;
+		algo = testTime;
+	}
+	else {
+		displayArgsErr();
+		exit(1);
+	}
+}
+
 int main(int argc, char* argv[]) {
 	initAlgos();
 	
@@ -93,19 +148,11 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 	
-	for (size_t i = 0; i < sizeof(algos) / sizeof(algos[0]); ++i) {
-		if (strcmp(algos[i], argv[1]) == 0) {
-			chosenAlgo = argv[1];
-			break;
-		}
-	}
+	chooseAlgo(argv[1]);
 	
-	if (chosenAlgo == NULL) {
-		displayArgsErr();
-		exit(1);
-	}
+	launchTest(10);
 	
-	printf("%s\n", chosenAlgo);
+	printf("Ended\n");
 	
 	return 0;
 }

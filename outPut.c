@@ -40,7 +40,7 @@ FILE* createCSV(const char* fileName, const char* titleTab[], const size_t table
 * @tableSize the size of tab, because we can't know it here.
 * @author Thomas MEDARD
 */
-void writeLineCsv(const char* fileName, const TABLEAU tab, const size_t tableSize) {
+void writeLineCsv(const char* fileName, const int tab[], const size_t tableSize) {
 	FILE* file = fopen(fileName, "a");
 	
 	if (file == NULL) {
