@@ -40,6 +40,7 @@ void bubblesSort (TABLEAU tab, const size_t tabSize) {
 	}
 }
 
+/*
 int main () {
 	TABLEAU tab;
 	genereTab(10, tab);
@@ -57,4 +58,4 @@ int main () {
 	printf("\n");
 
 	return 0;
-}
+}*/
