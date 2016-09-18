@@ -1,26 +1,8 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define MAX 10
-typedef int TABLEAU[MAX];
-
 //int * tab = (int *) malloc (1 000 000 * sizeof(int));
 //		(int*) calloc (1 000 000, sizeof(int));  = malloc + memset
 
-
-/*
-@author : Remi SEGRETAIN
-*/
-void genereTab (const size_t size, TABLEAU tab) {
-	srand(time(0));
-	for (size_t i = 0; i < size; ++i) {
-		tab[i] = (unsigned int) rand() % 50;
-	}//for
-	printf("%lu\n", sizeof(tab));
-}// genereTab
-
-void bubblesSort (TABLEAU tab, const size_t tabSize) {
+void bubblesSort (int tab[], const size_t tabSize) {
 
     int sorted = 0;
 	int tmp;

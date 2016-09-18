@@ -1,31 +1,52 @@
 SHELL  = /bin/bash
 CC     = gcc
-CFLAGS = -Wall -W -std=c99 -pedantic
+CFLAGS = -Wall -W -std=c99 -pedantic -I.
 LIBS   =
+
+LINKER   = gcc -o
+# linking flags here
+LFLAGS   = -Wall -I. -lm
+
+SRCDIR   = src
+OBJDIR   = obj
+BINDIR   = bin
+
+SOURCES  := $(wildcard $(SRCDIR)/*.c)
+INCLUDES := $(wildcard $(SRCDIR)/*.h)
+OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+rm       = rm -f
 
 # Rajouter le nom des executables apres '=', separes par un espace.
 # Si une ligne est pleine, rajouter '\' en fin de ligne et passer a la suivante.
 
 # pour compiler avec bor-util.c
-EXECSUTIL = Workbench outPut
+# project name (generate executable with this name)
+TARGET   = Workbench
 
+
+$(BINDIR)/$(TARGET): $(OBJECTS)
+	@$(LINKER) $@ $(LFLAGS) $(OBJECTS)
+	@echo "Linking complete!"
+
+$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled "$<" successfully!"
+
+$(EXECSUTIL) : %: %.o bor-util.o
+	$(CC) -o $@ $@.o bor-util.o $(LIBS)
+	
 .c.o :
 	$(CC) -c $(CFLAGS) $*.c
 
 help ::
-	@echo "Options du make : help all clean distclean"
+	@echo "Options du make : help all clean remove"
 
-all :: $(EXECS) $(EXECSUTIL) $(EXECSTIMER)
-
-$(EXECS) : %: %.o
-	$(CC) -o $@ $@.o $(LIBS)
-
-$(EXECSUTIL) : %: %.o bor-util.o
-	$(CC) -o $@ $@.o bor-util.o $(LIBS)
+all :: $(TARGET)
 
 clean ::
-	\rm -f *.o core
+	@$(rm) $(OBJECTS)
+	@echo "Cleanup complete!"
 
-distclean :: clean
-	\rm -f *% $(EXECS) $(EXECSUTIL) $(EXECSTIMER)
-
+remove :: clean
+	@$(rm) $(BINDIR)/$(TARGET)
+	@echo "Executable removed!"

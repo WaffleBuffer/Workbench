@@ -6,6 +6,7 @@
 #include <signal.h> //SIGALARM
 
 #include "bor-util.h"
+#include "Sorts/Bubbles.c"
 
 // Table sizes to test
 #define SIZE1  100
@@ -24,29 +25,33 @@
 #define SIZE14 900000
 #define MAX    1000000
 
+// List of all available alorithims
+#define BUBBLES        "Bubbles"
+#define SEQUENTIAL_INS "SequentialInsertion"
+#define DICHO_INS 	   "DichotomousInsertion"
+#define SELEC_PERM     "SelectionPermutation"
+#define FUSION 		   "Fusion"
+#define QUICKSORT	   "QuickSort"
+#define FIND_TREES     "FindTrees"
+#define STACK 		   "Stack"
+
+// Number of test per size
+#define NB_TEST_PER_SIZE 20
+
 // Maximum time allowed to a test
 #define TIME_BEFORE_STOP 300
 
 // Maximum value for a random element
-#defint MAX_RAND_VALUE
+#define MAX_RAND_VALUE 100
 
 // All the sizes to test
 const size_t sizesTab[15] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZE6,
 						SIZE7, SIZE8, SIZE9, SIZE10, SIZE11, SIZE12,
 						SIZE13, SIZE14, MAX};
-						
-// List of all available alorithims
-const char* bubbles 	  = "Bubbles";
-const char* sequentialIns = "SequentialInsertion";
-const char* dichoIns 	  = "DichotomousInsertion";
-const char* selecPerm     = "SelectionPermutation";
-const char* fusion 		  = "Fusion";
-const char* quickSort	  = "QuickSort";
-const char* findTrees     = "FindTrees";
-const char* stack 		  = "Stack";
 
 // All the available algorithims
-const char* algos[8];
+const char* algos[8] = {BUBBLES, SEQUENTIAL_INS, DICHO_INS, SELEC_PERM, FUSION, QUICKSORT
+						FIND_TREES, STACK};
 
 // The name of the chosen algorithim
 const char* chosenAlgo;
@@ -64,7 +69,6 @@ void (*algo)(int tab[], const size_t tabSize);
 * @author Remi SEGRETAIN
 */
 void initTabRand (int tab[], const size_t size) {
-	srand(time(0));
 	for (size_t i = 0; i < size; ++i) {
 		tab[i] = (unsigned int) rand() % MAX_RAND_VALUE;
 	}//for
@@ -81,21 +85,6 @@ void displayArgsErr(void) {
 		fprintf(stderr, "%s, ", algos[i]);
 	}
 	fprintf(stderr, "\n");
-}
-
-/**
-* Initialize algos variable with all valids algorithims' names.
-* @author Thomas MEDARD
-*/
-void initAlgos(void) {
-	algos[0] = bubbles;
-	algos[1] = sequentialIns;
-	algos[2] = dichoIns;
-	algos[3] = selecPerm;
-	algos[4] = fusion;
-	algos[5] = quickSort;
-	algos[6] = findTrees;
-	algos[7] = stack;
 }
 
 /**
@@ -124,27 +113,43 @@ void alarmHandler(int sig) {
 * @author Thomas MEDARD
 */
 void launchTest(const size_t sizeToTest) {
+	srand(time(0));
 	// Creating the table
 	int tab[sizeToTest];
-	// Generating  its values
-	initTabRand(tab, sizeToTest);
 	
 	// Affecting SIGALRM handler
 	bor_signal(SIGALRM, alarmHandler, 0);
 	
-	// Begin time mesure
-	clock_t begin = clock();
-	// Launching alarm
-	alarm(TIME_BEFORE_STOP);
-	// Calling the chosen algorithim
-	algo(tab, sizeToTest);
-	// End time mesure
-	clock_t end = clock();
+	// All results
+	double resultsSum = 0.0;
 	
-	// Calculating passed time
-	double time = ((double) (end - begin) / CLOCKS_PER_SEC);
+	// Testing NB_TEST_PER_SIZE times then getting the avergare result
+	for (int i = 0; i < NB_TEST_PER_SIZE; ++i) {
+		
+		// Generating  its values
+		initTabRand(tab, sizeToTest);
+		
+		// Begin time mesure
+		clock_t begin = clock();
+		// Launching alarm
+		alarm(TIME_BEFORE_STOP);
+		
+		// Calling the chosen algorithim
+		algo(tab, sizeToTest);
+		
+		// End time mesure
+		clock_t end = clock();
+		
+		// Calculating passed time
+		resultsSum += (end - begin) / CLOCKS_PER_SEC * 1000.0;
+	}
 	
-	printf("%lf\n", time);
+	// TODO : find why this result is wrong
+	const double finalRes = resultsSum / NB_TEST_PER_SIZE;
+	
+	// TODO : Create a csv file for the result
+	printf("%fl ms\n", finalRes);
+	
 }
 
 /**
@@ -153,36 +158,36 @@ void launchTest(const size_t sizeToTest) {
 * @author Thomas MEDARD
 */
 void chooseAlgo(char* arg) {
-	if (strcmp(arg, bubbles) == 0) {
-		chosenAlgo = bubbles;
+	if (strcmp(arg, BUBBLES) == 0) {
+		chosenAlgo = BUBBLES;
+		algo = bubblesSort;
+	}
+	else if (strcmp(arg, SEQUENTIAL_INS) == 0) {
+		chosenAlgo = SEQUENTIAL_INS;
 		algo = testTime;
 	}
-	else if (strcmp(arg, sequentialIns) == 0) {
-		chosenAlgo = sequentialIns;
+	else if (strcmp(arg, DICHO_INS) == 0) {
+		chosenAlgo = DICHO_INS;
 		algo = testTime;
 	}
-	else if (strcmp(arg, dichoIns) == 0) {
-		chosenAlgo = dichoIns;
+	else if (strcmp(arg, SELEC_PERM) == 0) {
+		chosenAlgo = SELEC_PERM;
 		algo = testTime;
 	}
-	else if (strcmp(arg, selecPerm) == 0) {
-		chosenAlgo = selecPerm;
+	else if (strcmp(arg, FUSION) == 0) {
+		chosenAlgo = FUSION;
 		algo = testTime;
 	}
-	else if (strcmp(arg, fusion) == 0) {
-		chosenAlgo = fusion;
+	else if (strcmp(arg, FIND_TREES) == 0) {
+		chosenAlgo = FIND_TREES;
 		algo = testTime;
 	}
-	else if (strcmp(arg, findTrees) == 0) {
-		chosenAlgo = findTrees;
+	else if (strcmp(arg, STACK) == 0) {
+		chosenAlgo = STACK;
 		algo = testTime;
 	}
-	else if (strcmp(arg, stack) == 0) {
-		chosenAlgo = stack;
-		algo = testTime;
-	}
-	else if (strcmp(arg, quickSort) == 0) {
-		chosenAlgo = quickSort;
+	else if (strcmp(arg, QUICKSORT) == 0) {
+		chosenAlgo = QUICKSORT;
 		algo = testTime;
 	}
 	else {
@@ -195,7 +200,6 @@ void chooseAlgo(char* arg) {
 * The main
 */
 int main(int argc, char* argv[]) {
-	initAlgos();
 	
 	if (argc < 2) {
 		displayArgsErr();
@@ -204,8 +208,10 @@ int main(int argc, char* argv[]) {
 	
 	chooseAlgo(argv[1]);
 	
-	launchTest(10);
+	//TODO : create sons for all sizes
+	launchTest(SIZE1);
 	
+	// TODO gather all csv files from results and create the final one (and removing the others)
 	printf("Ended\n");
 	
 	return 0;

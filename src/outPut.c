@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Workbench.c"
-
-#define csvSeparator ';'
+#define CSV_SEPARATOR ';'
 
 /**
 * Create (or replace) a csv file names fileName and write all elements in titleTab.
@@ -23,7 +21,7 @@ FILE* createCSV(const char* fileName, const char* titleTab[], const size_t table
 	}
 	
 	for (size_t i = 0; i < tableSize; ++i) {
-		fprintf(file, "%s%c", titleTab[i], csvSeparator);
+		fprintf(file, "%s%c", titleTab[i], CSV_SEPARATOR);
 	}
 	
 	fprintf(file, "\n");
@@ -49,21 +47,9 @@ void writeLineCsv(const char* fileName, const int tab[], const size_t tableSize)
 	}
 	
 	for (size_t i = 0; i < tableSize; ++i) {
-		fprintf(file, "%d%c", tab[i], csvSeparator);
+		fprintf(file, "%d%c", tab[i], CSV_SEPARATOR);
 	}
 	
 	fprintf(file, "\n");
 	fclose(file);
 }
-// Testing main
-/*int main() {
-	char* titles[] = {"title1", "title2", "title3", "title4"};
-	int tab[4];
-	
-	genereTab(tab, 4);
-	
-	createCSV("test.csv", titles, 4);
-	writeLineCsv("test.csv", tab, 4);
-	
-	return 0;
-}*/
