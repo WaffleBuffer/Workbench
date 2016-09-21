@@ -2,6 +2,7 @@
 #include "Sorts/Bubbles.c"
 #include "Sorts/SelecPerm.c"
 #include "Sorts/DichoInser.c"
+#include "outPut.c"
 
 #include <stdio.h>  // printf
 #include <stdlib.h>
@@ -50,6 +51,9 @@
 const size_t sizesTab[15] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZE6,
 						SIZE7, SIZE8, SIZE9, SIZE10, SIZE11, SIZE12,
 						SIZE13, SIZE14, MAX};
+						
+// All the sizes to test but in char*
+const char* litteralSizesTab[15];
 
 // All the available algorithims
 const char* algos[8] = {BUBBLES, SEQUENTIAL_INS, DICHO_INS, SELEC_PERM, FUSION, QUICKSORT
@@ -60,13 +64,10 @@ const char* chosenAlgo;
 // The pointer to the chosen algorithim
 void (*algo)(int tab[], const size_t tabSize);
 
-//int * tab = (int *) malloc (1 000 000 * sizeof(int));
-//		(int*) calloc (1 000 000, sizeof(int));  = malloc + memset
-
-
-// The files desciptor of the tube to communicate results
-int pipeFds[2];
-
+// All the results
+double results[15];
+// The inedx of the current size
+size_t currentSize = 0;
 
 /**
 * Initialize all values in tab of size size to a random number. tab must have been set to size size.
@@ -161,23 +162,8 @@ void launchTest(const size_t sizeToTest) {
 	}
 	
 	const double finalRes = resultsSum / (double) NB_TEST_PER_SIZE;
+	results[currentSize] = finalRes;
 	
-    ssize_t writeRes;
-    double results[2];
-
-    results[0] = sizeToTest;
-    results[1] = finalRes;
-
-    // Writing into the pipe the result
-
-	writeRes = bor_write(pipeFds[1], results, 2);
-
-	if (writeRes < 0) {
-	    perror("read");
-	    exit(1);
-	}
-
-	close(pipeFds[1]);
 	printf("for size %d : %lf ms\n", sizeToTest, finalRes);
 	
 }
@@ -227,7 +213,19 @@ void chooseAlgo(char* arg) {
 }
 
 /**
-* The main
+* Create the csv report 
+* @author Thomas MEDARD 
+*/
+void creatReport(void) {
+	char* tmp = chosenAlgo;
+	char* fileName = strcat(fileName, ".csv");
+	
+	createCSV(fileName, litteralSizesTab, 15);
+}
+
+/**
+* The main : make all test for on sorting algorithim
+* @author Thomas MEDARD, Rémi SEGRETAIN
 */
 int main(int argc, char* argv[]) {
 	
@@ -237,77 +235,18 @@ int main(int argc, char* argv[]) {
 	}
 	
 	chooseAlgo(argv[1]);
-
-    // Creating pipe
-    int fdp = pipe(pipeFds);
-    
-    if (fdp < 0) {
-        perror("pipe");
-        exit(1);
-    }
 	
-	pid_t forkRes;
+	/* = {itoa(SIZE1), itoa(SIZE2), itoa(SIZE3), itoa(SIZE4), itoa(SIZE5), itoa(SIZE6),
+						itoa(SIZE7), itoa(SIZE8), itoa(SIZE9), itoa(SIZE10), itoa(SIZE11), itoa(SIZE12),
+						itoa(SIZE13), itoa(SIZE14), itoa(MAX)}*/
 	
 	for (unsigned int i = 0; i < 15; ++i) {
-		forkRes = fork();
-		
-		if (forkRes < 0) {
-			perror("fork");
-			exit(1);
-		}
-		
-        // Child
-		if (forkRes == 0) {
-            close(pipeFds[0]);
-			launchTest(sizesTab[i]);
-			exit(0);
-		}
+		launchTest(sizesTab[i]);
 	}
 
     // Father
-    close(pipeFds[1]);
 
-    bor_signal(SIGPIPE, sigPipeHandler, SA_RESTART);
-	
-	int status;
-	pid_t done;
-
-    ssize_t readRes;
-    double results[30];
-	
-	while (1) {
-		done = wait(&status);
-		
-		if (done == -1) {
-			// no more child processes
-			if (errno == ECHILD) {
-				break; 
-			}
-		} 
-		else {
-			if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
-				fprintf(stderr, "pid %d failed\n", done);
-				exit(1);
-			}
-		}
-		
-        printf("debug\n");
-        
-		while(1) {
-			readRes = bor_read(pipeFds[0], results, 30);
-
-			if (readRes <= 0) {
-				break;
-			}
-		}
-
-        printf("father : size %lf : %lf ms\n", results[0], results[1]);
-
-	}
-		
-    close(pipeFds[0]);
-
-	// TODO gather all csv files from results and create the final one (and removing the others)
+	// TODO create csv file from results and create the final one (and removing the others)
 	printf("Ended\n");
 
 	return 0;
