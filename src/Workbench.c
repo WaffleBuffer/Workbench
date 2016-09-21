@@ -292,7 +292,7 @@ int main(int argc, char* argv[]) {
 		}
 		
         printf("debug\n");
-
+        
 		while(1) {
 			readRes = bor_read(pipeFds[0], results, 30);
 
