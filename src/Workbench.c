@@ -1,12 +1,12 @@
-#include <stdio.h> // printf
+#include "bor-util.h"
+#include "Sorts/Bubbles.c"
+
+#include <stdio.h>  // printf
 #include <stdlib.h>
-#include <time.h> //clock_t
+#include <time.h>   //clock_t
 #include <string.h> // strcmp
 #include <unistd.h> // sleep
 #include <signal.h> //SIGALARM
-
-#include "bor-util.h"
-#include "Sorts/Bubbles.c"
 
 // Table sizes to test
 #define SIZE1  100
@@ -38,7 +38,7 @@
 // Number of test per size
 #define NB_TEST_PER_SIZE 20
 
-// Maximum time allowed to a test
+// Maximum time allowed to a test (5 minutes)
 #define TIME_BEFORE_STOP 300
 
 // Maximum value for a random element
@@ -148,7 +148,7 @@ void launchTest(const size_t sizeToTest) {
 	const double finalRes = resultsSum / NB_TEST_PER_SIZE;
 	
 	// TODO : Create a csv file for the result
-	printf("%fl ms\n", finalRes);
+	printf("for size %d : %fl ms\n", sizeToTest, finalRes);
 	
 }
 
@@ -208,9 +208,47 @@ int main(int argc, char* argv[]) {
 	
 	chooseAlgo(argv[1]);
 	
-	//TODO : create sons for all sizes
-	launchTest(SIZE1);
+	//TODO : create childs for all sizes
 	
+	pid_t forkRes;
+	
+	for (unsigned int i = 0; i < sizeof(sizesTab); ++i) {
+		forkRes = fork();
+		
+		if (forkRes < 0) {
+			perror("fork");
+			exit(1);
+		}
+		
+		if (forkRes == 0) {
+			launchTest(sizesTab[i]);
+			exit(0);
+		}
+	}
+	
+	// Wait for all childs to finish their task
+	int status;
+	pid_t done;
+	
+	while (1) {
+		done = wait(&status);
+		
+		if (done == -1) {
+			// no more child processes
+			if (errno == ECHILD) {
+				break; 
+			}
+		} 
+		else {
+			if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
+				fprintf(stderr, "pid %d failed\n", done);
+				exit(1);
+			}
+		}
+		
+		status = NULL;
+	}
+		
 	// TODO gather all csv files from results and create the final one (and removing the others)
 	printf("Ended\n");
 	
