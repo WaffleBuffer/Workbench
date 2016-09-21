@@ -170,13 +170,17 @@ void launchTest(const size_t sizeToTest) {
 
     // Writing into the pipe the result
 
+    printf("debut\n");
 	writeRes = bor_write(pipeFds[1], results, 2);
+
+    printf("debut1\n");
 
 	if (writeRes < 0) {
 	    perror("read");
 	    exit(1);
 	}
 
+    printf("fin\n");
 	close(pipeFds[1]);
 	printf("for size %d : %lf ms\n", sizeToTest, finalRes);
 	
@@ -291,8 +295,6 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		
-        printf("debug\n");
-
 		while(1) {
 			readRes = bor_read(pipeFds[0], results, 30);
 
