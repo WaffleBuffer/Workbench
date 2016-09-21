@@ -16,10 +16,6 @@ INCLUDES := $(wildcard $(SRCDIR)/*.h)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 rm       = rm -f
 
-# Rajouter le nom des executables apres '=', separes par un espace.
-# Si une ligne est pleine, rajouter '\' en fin de ligne et passer a la suivante.
-
-# pour compiler avec bor-util.c
 # project name (generate executable with this name)
 TARGET   = Workbench
 
@@ -50,3 +46,4 @@ clean ::
 remove :: clean
 	@$(rm) $(BINDIR)/$(TARGET)
 	@echo "Executable removed!"
+
