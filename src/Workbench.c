@@ -1,15 +1,16 @@
 #include "bor-util.h"
+
+// All sorts algotithims
 #include "Sorts/Bubbles.c"
 #include "Sorts/SelecPerm.c"
 #include "Sorts/DichoInser.c"
-#include "outPut.c"
 
 #include <stdio.h>  // printf
-#include <stdlib.h>
-#include <time.h>   //clock_t
+#include <stdlib.h> // itoa
+#include <time.h>   // clock_t
 #include <string.h> // strcmp
 #include <unistd.h> // sleep
-#include <signal.h> //SIGALARM
+#include <string.h> // strcpy
 
 // Table sizes to test
 #define SIZE1  100
@@ -41,39 +42,45 @@
 // Number of test per size
 #define NB_TEST_PER_SIZE 20
 
+// Number of test to do
+#define NB_SIZE_TO_TEST 15
+
 // Maximum time allowed to a test (5 minutes)
-#define TIME_BEFORE_STOP 300
+#define TIME_BEFORE_STOP 5//300
 
 // Maximum value for a random element
 #define MAX_RAND_VALUE 100
 
+// The csv separator used
+#define CSV_SEPARATOR ';'
+
 // All the sizes to test
-const size_t sizesTab[15] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZE6,
+const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZE6,
 						SIZE7, SIZE8, SIZE9, SIZE10, SIZE11, SIZE12,
 						SIZE13, SIZE14, MAX};
 						
-// All the sizes to test but in char*
-const char* litteralSizesTab[15];
+// All the sizes to test but in char* (inititialized in main)
+char* litteralSizesTab[NB_SIZE_TO_TEST];
 
 // All the available algorithims
 const char* algos[8] = {BUBBLES, SEQUENTIAL_INS, DICHO_INS, SELEC_PERM, FUSION, QUICKSORT
 						FIND_TREES, STACK};
 
 // The name of the chosen algorithim
-const char* chosenAlgo;
+char* chosenAlgo;
 // The pointer to the chosen algorithim
 void (*algo)(int tab[], const size_t tabSize);
 
 // All the results
 double results[15];
 // The inedx of the current size
-size_t currentSize = 0;
+size_t currentSize;
 
 /**
 * Initialize all values in tab of size size to a random number. tab must have been set to size size.
 * @param tab The table to generate values into. Must have been set to size size.
 * @param size the size of tab.
-* @author Remi SEGRETAIN
+* @author Rémi SEGRETAIN
 */
 void initTabRand (int tab[], const size_t size) {
 	for (size_t i = 0; i < size; ++i) {
@@ -105,21 +112,81 @@ void testTime(int tab[], const size_t tabSize) {
 }
 
 /**
+* Create (or replace) a csv file names fileName and write all elements in titleTab.
+*
+* @param fileName The name of the file that should be created or replaced.
+* @param titleTab The first elements wrote in a line. Correspond to a line of titles.
+* @param tableSize The size of titleTab, because we can't know it here.
+* @return the file descriptor of the csv file.
+* @author Thomas MEDARD
+*/
+FILE* createCSV(char* fileName, char* titleTab[], size_t tableSize) {
+	
+	printf("%s\n", fileName);
+	FILE* file = fopen(fileName, "w");
+	
+	if (file == NULL) {
+		perror("fopen");
+		exit(1);
+	}
+	
+	for (size_t i = 0; i < tableSize; ++i) {
+		fprintf(file, "%s%c", titleTab[i], CSV_SEPARATOR);
+	}
+	
+	fprintf(file, "\n");
+	fclose(file);
+	
+	return file;
+}
+
+/**
+* Write a line of element in a csv file (that must exists).
+* 
+* @param fileName the name of the file to write into.
+* @param tab the elements to write.
+* @tableSize the size of tab, because we can't know it here.
+* @author Thomas MEDARD
+*/
+void writeLineCsv(const char* fileName, const int tab[], const size_t tableSize) {
+	FILE* file = fopen(fileName, "a");
+	
+	if (file == NULL) {
+		fprintf(stderr, "fopen failed (file maybe already opened or doesn't exists)\n");
+		exit(1);
+	}
+	
+	for (size_t i = 0; i < tableSize; ++i) {
+		fprintf(file, "%d%c", tab[i], CSV_SEPARATOR);
+	}
+	
+	fprintf(file, "\n");
+	fclose(file);
+}
+
+/**
+* Create the csv report for the current tested test.
+* @author Thomas MEDARD 
+*/
+void creatReport(void) {
+
+	printf("debug1\n");
+	// TODO : find why it's not even continuing.
+	createCSV(strcat(chosenAlgo, ".csv"), litteralSizesTab, NB_SIZE_TO_TEST);
+	printf("debug3\n");
+}
+
+/**
 * Function called on SIGALRM (when a test is too long).
 * @param sig the code of the signal (unused but needed).
 * @author Thomas MEDARD
 */
 void alarmHandler(int sig) {
-	printf("Test too long\n");
-	exit(0);
-}
-
-/**
-* Handle SIGPIPE to display a messageinstead of just stoping
-* @author Thomas MEDARD
-*/
-void sigPipeHandler(int sig) {	
-	printf("Signal %d received\n", sig);
+	printf("Test too long on size %d\n", sizesTab[currentSize]);
+	printf("Creating report\n");
+	
+	creatReport();
+	
 	exit(0);
 }
 
@@ -132,9 +199,6 @@ void launchTest(const size_t sizeToTest) {
 	srand(time(0));
 	// Creating the table
 	int tab[sizeToTest];
-	
-	// Affecting SIGALRM handler
-	bor_signal(SIGALRM, alarmHandler, 0);
 	
 	// All results
 	double resultsSum = 0.0;
@@ -213,41 +277,38 @@ void chooseAlgo(char* arg) {
 }
 
 /**
-* Create the csv report 
-* @author Thomas MEDARD 
-*/
-void creatReport(void) {
-	char* tmp = chosenAlgo;
-	char* fileName = strcat(fileName, ".csv");
-	
-	createCSV(fileName, litteralSizesTab, 15);
-}
-
-/**
 * The main : make all test for on sorting algorithim
 * @author Thomas MEDARD, Rémi SEGRETAIN
 */
 int main(int argc, char* argv[]) {
 	
+	// Checking arguments
 	if (argc < 2) {
 		displayArgsErr();
 		exit(1);
 	}
 	
+	// Affecting the right algorithim depending on the argument
 	chooseAlgo(argv[1]);
 	
-	/* = {itoa(SIZE1), itoa(SIZE2), itoa(SIZE3), itoa(SIZE4), itoa(SIZE5), itoa(SIZE6),
-						itoa(SIZE7), itoa(SIZE8), itoa(SIZE9), itoa(SIZE10), itoa(SIZE11), itoa(SIZE12),
-						itoa(SIZE13), itoa(SIZE14), itoa(MAX)}*/
+	// Initialization of litteralSizesTab
+	char litteralSize[12];
+	for (size_t i = 0; i < NB_SIZE_TO_TEST; ++i) {
+		// Convert an int into string (safer than itoa and actualy works)
+		snprintf(litteralSize, 12, "%d", sizesTab[i]);
+		litteralSizesTab[i] = litteralSize;
+	}
 	
-	for (unsigned int i = 0; i < 15; ++i) {
-		launchTest(sizesTab[i]);
+	// Affecting SIGALRM handler
+	bor_signal(SIGALRM, alarmHandler, SA_RESTART);
+	
+	// Launching tests per sizes
+	for (currentSize = 0; currentSize < NB_SIZE_TO_TEST; ++currentSize) {
+		launchTest(sizesTab[currentSize]);
 	}
 
-    // Father
-
-	// TODO create csv file from results and create the final one (and removing the others)
-	printf("Ended\n");
+	printf("Creating report\n");
+	creatReport();
 
 	return 0;
 }

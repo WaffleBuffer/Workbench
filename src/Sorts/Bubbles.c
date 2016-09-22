@@ -1,7 +1,11 @@
 #include <stdlib.h>
-//int * tab = (int *) malloc (1 000 000 * sizeof(int));
-//		(int*) calloc (1 000 000, sizeof(int));  = malloc + memset
 
+/*
+* Sort an int tab with bubbles algorithim.
+* @param tab The table of int to sort.
+* @param tabSize the size of tab.
+* @author Thomas MEDARD
+*/
 void bubblesSort (int tab[], const size_t tabSize) {
 
     int sorted = 0;
@@ -21,23 +25,3 @@ void bubblesSort (int tab[], const size_t tabSize) {
 		++iteration;
 	}
 }
-
-/*
-int main () {
-	TABLEAU tab;
-	genereTab(10, tab);
-
-	for (unsigned int i = 0; i < sizeof(tab) / sizeof(int); ++i) {
-		printf("%d ", tab[i]);
-	}
-	printf("\n");
-
-	bubblesSort (tab, 10);
-
-	for (unsigned int i = 0; i < sizeof(tab) / sizeof(int); ++i) {
-		printf("%d ", tab[i]);
-	}
-	printf("\n");
-
-	return 0;
-}*/
