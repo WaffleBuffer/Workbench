@@ -4,13 +4,14 @@
 #include "Sorts/Bubbles.c"
 #include "Sorts/SelecPerm.c"
 #include "Sorts/DichoInser.c"
+#include "Sorts/Merge.c"
 
 #include <stdio.h>  // printf
 #include <stdlib.h> // itoa
 #include <time.h>   // clock_t
 #include <string.h> // strcmp
 #include <unistd.h> // sleep
-#include <string.h> // strcpy
+#include <string.h> // strcpy_s
 
 // Table sizes to test
 #define SIZE1  100
@@ -34,7 +35,7 @@
 #define SEQUENTIAL_INS "SequentialInsertion"
 #define DICHO_INS 	   "DichotomousInsertion"
 #define SELEC_PERM     "SelectionPermutation"
-#define FUSION 		   "Fusion"
+#define MERGE 		   "Merge"
 #define QUICKSORT	   "QuickSort"
 #define FIND_TREES     "FindTrees"
 #define STACK 		   "Stack"
@@ -46,7 +47,7 @@
 #define NB_SIZE_TO_TEST 15
 
 // Maximum time allowed to a test (5 minutes)
-#define TIME_BEFORE_STOP 5//300
+#define TIME_BEFORE_STOP 300
 
 // Maximum value for a random element
 #define MAX_RAND_VALUE 100
@@ -58,12 +59,9 @@
 const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZE6,
 						SIZE7, SIZE8, SIZE9, SIZE10, SIZE11, SIZE12,
 						SIZE13, SIZE14, MAX};
-						
-// All the sizes to test but in char* (inititialized in main)
-char* litteralSizesTab[NB_SIZE_TO_TEST];
 
 // All the available algorithims
-const char* algos[8] = {BUBBLES, SEQUENTIAL_INS, DICHO_INS, SELEC_PERM, FUSION, QUICKSORT
+const char* algos[8] = {BUBBLES, SEQUENTIAL_INS, DICHO_INS, SELEC_PERM, MERGE, QUICKSORT
 						FIND_TREES, STACK};
 
 // The name of the chosen algorithim
@@ -120,9 +118,8 @@ void testTime(int tab[], const size_t tabSize) {
 * @return the file descriptor of the csv file.
 * @author Thomas MEDARD
 */
-FILE* createCSV(char* fileName, char* titleTab[], size_t tableSize) {
+FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize) {
 	
-	printf("%s\n", fileName);
 	FILE* file = fopen(fileName, "w");
 	
 	if (file == NULL) {
@@ -131,7 +128,7 @@ FILE* createCSV(char* fileName, char* titleTab[], size_t tableSize) {
 	}
 	
 	for (size_t i = 0; i < tableSize; ++i) {
-		fprintf(file, "%s%c", titleTab[i], CSV_SEPARATOR);
+		fprintf(file, "%d%c", titlesTab[i], CSV_SEPARATOR);
 	}
 	
 	fprintf(file, "\n");
@@ -148,16 +145,16 @@ FILE* createCSV(char* fileName, char* titleTab[], size_t tableSize) {
 * @tableSize the size of tab, because we can't know it here.
 * @author Thomas MEDARD
 */
-void writeLineCsv(const char* fileName, const int tab[], const size_t tableSize) {
+void writeLineCsv(const char* fileName, const double tab[], const size_t tableSize) {
 	FILE* file = fopen(fileName, "a");
 	
 	if (file == NULL) {
-		fprintf(stderr, "fopen failed (file maybe already opened or doesn't exists)\n");
+		perror("fopen");
 		exit(1);
 	}
 	
 	for (size_t i = 0; i < tableSize; ++i) {
-		fprintf(file, "%d%c", tab[i], CSV_SEPARATOR);
+		fprintf(file, "%lf%c", tab[i], CSV_SEPARATOR);
 	}
 	
 	fprintf(file, "\n");
@@ -169,11 +166,20 @@ void writeLineCsv(const char* fileName, const int tab[], const size_t tableSize)
 * @author Thomas MEDARD 
 */
 void creatReport(void) {
+	
+	char fileName[29];
+	
+	fileName[0] = '.';
+	fileName[1] = '.';
+	fileName[2] = '/';
+	
+	strcat(fileName, chosenAlgo);
+	strcat(fileName, ".csv");
 
-	printf("debug1\n");
-	// TODO : find why it's not even continuing.
-	createCSV(strcat(chosenAlgo, ".csv"), litteralSizesTab, NB_SIZE_TO_TEST);
-	printf("debug3\n");
+	createCSV(fileName, sizesTab, NB_SIZE_TO_TEST);
+	writeLineCsv(fileName, results, currentSize);
+	
+	printf("Report %s created", fileName);
 }
 
 /**
@@ -183,7 +189,6 @@ void creatReport(void) {
 */
 void alarmHandler(int sig) {
 	printf("Test too long on size %d\n", sizesTab[currentSize]);
-	printf("Creating report\n");
 	
 	creatReport();
 	
@@ -254,9 +259,9 @@ void chooseAlgo(char* arg) {
 		chosenAlgo = SELEC_PERM;
 		algo = selecPerm;
 	}
-	else if (strcmp(arg, FUSION) == 0) {
-		chosenAlgo = FUSION;
-		algo = testTime;
+	else if (strcmp(arg, MERGE) == 0) {
+		chosenAlgo = MERGE;
+		algo = merge;
 	}
 	else if (strcmp(arg, FIND_TREES) == 0) {
 		chosenAlgo = FIND_TREES;
@@ -291,14 +296,6 @@ int main(int argc, char* argv[]) {
 	// Affecting the right algorithim depending on the argument
 	chooseAlgo(argv[1]);
 	
-	// Initialization of litteralSizesTab
-	char litteralSize[12];
-	for (size_t i = 0; i < NB_SIZE_TO_TEST; ++i) {
-		// Convert an int into string (safer than itoa and actualy works)
-		snprintf(litteralSize, 12, "%d", sizesTab[i]);
-		litteralSizesTab[i] = litteralSize;
-	}
-	
 	// Affecting SIGALRM handler
 	bor_signal(SIGALRM, alarmHandler, SA_RESTART);
 	
@@ -307,7 +304,6 @@ int main(int argc, char* argv[]) {
 		launchTest(sizesTab[currentSize]);
 	}
 
-	printf("Creating report\n");
 	creatReport();
 
 	return 0;

@@ -9,11 +9,13 @@ void dichoInser (int tab[], const size_t tabSize) {
 	size_t i, j, left, right, middle;
 	int save;
 
+	// Main loop
 	for (i = 1; i < tabSize; ++i) {
 
         left = 0;
         right = i;
 
+		// While we didn't find the right spot
 		while (left < right) {
             middle = (left + right) / 2;
             
@@ -25,6 +27,7 @@ void dichoInser (int tab[], const size_t tabSize) {
             }
         }
 
+		// Insert the value at the right spot
 		save = tab[i];
         for (j = i; j > left; --j) {
             tab[j] = tab[j - 1];
