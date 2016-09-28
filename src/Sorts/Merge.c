@@ -6,41 +6,28 @@
  * @param endTab2 The ending index of the second tab.
  * @author Thomas MEDARD
  */
-void mergeTab(int tab[], const size_t beginTab1, const size_t endTab1, const size_t endTab2) {
-	// Array used for merging
-    int temp[(endTab2 - beginTab1) + 1];    
-    size_t i, j, k;
+void mergeTab(int tab[], const size_t left, const size_t middle, const size_t right) {
+	int* tmp = (int*) malloc((right - left + 1)*sizeof(int));
+	int tabLeft = left;
+	int tabRight = middle + 1;
 	
-	// Beginning of the first list
-    i = beginTab1;  
-	// Beginning of the second list	
-    j = endTab1 + 1;    
-	// Tmp iterator
-    k = 0;
-    
-	// While elements in both lists
-    while(i <= endTab1 && j <= endTab2)	{
-        if(tab[i] < tab[j]) {
-            temp[k++] = tab[i++];
-		}
-        else {
-            temp[k++] = tab[j++];
-		}
-    }
-    
-	// Copy remaining elements of the first list
-    while(i <= endTab1) {    
-        temp[k++] = tab[i++];
-	}
-        
-	// Copy remaining elements of the second list
-    while(j <= endTab2) {  
-        temp[k++] = tab[j++];
+	for ( int i = left; i <= right; ++i) {
+		tmp[i - left] = tab[i];
 	}
 	
-    // Transfer elements from temp[] back to tab[]
-    for(i = beginTab1, j = 0; i <= endTab2; i++, j++) {
-        tab[i] = temp[j];
+	for ( int i = left; i <= right; ++i) {
+		
+		if (tabLeft == middle +1) {
+			break;
+		}
+		else if ( tabRight == right + 1 || tmp[tabLeft - left] <= tmp[tabRight - left] ) {
+			tab[i] = tmp[tabLeft - left];
+			++tabLeft;
+		}
+		else {
+			tab[i] = tmp[tabRight - left];
+			++tabRight;
+		}
 	}
 }
 
@@ -65,7 +52,7 @@ void mergesort(int tab[], size_t begin, size_t end) {
     }
 }
 
-/*
+/**
  * Sort an int table with merge algorithim.
  * @param tab The table of int to sort.
  * @param tabSize the size of tab.

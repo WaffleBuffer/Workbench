@@ -1,10 +1,11 @@
-#include "bor-util.h"
+#include "list.h"
 
 // All sorts algotithims
 #include "Sorts/Bubbles.c"
 #include "Sorts/SelecPerm.c"
 #include "Sorts/DichoInser.c"
 #include "Sorts/Merge.c"
+#include "Sorts/QuickSort.c"
 
 #include <stdio.h>  // printf
 #include <stdlib.h> // itoa
@@ -33,6 +34,7 @@
 // List of all available alorithims
 #define BUBBLES        "Bubbles"
 #define SEQUENTIAL_INS "SequentialInsertion"
+#define SEQUENTIAL_INS_CHAINED "SequentInsChained"
 #define DICHO_INS 	   "DichotomousInsertion"
 #define SELEC_PERM     "SelectionPermutation"
 #define MERGE 		   "Merge"
@@ -55,14 +57,17 @@
 // The csv separator used
 #define CSV_SEPARATOR ';'
 
+// The tested type
+typedef int TYPE;
+
 // All the sizes to test
 const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZE6,
 						SIZE7, SIZE8, SIZE9, SIZE10, SIZE11, SIZE12,
 						SIZE13, SIZE14, MAX};
 
 // All the available algorithims
-const char* algos[8] = {BUBBLES, SEQUENTIAL_INS, DICHO_INS, SELEC_PERM, MERGE, QUICKSORT
-						FIND_TREES, STACK};
+const char* algos[9] = {BUBBLES, SEQUENTIAL_INS, SEQUENTIAL_INS_CHAINED, DICHO_INS, SELEC_PERM, 
+						MERGE, QUICKSORT, FIND_TREES, STACK};
 
 // The name of the chosen algorithim
 char* chosenAlgo;
@@ -86,6 +91,19 @@ void initTabRand (int tab[], const size_t size) {
 	}//for
 }// initTabRand
 
+void initListRand(LIST* myList, const size_t size) {
+	LIST head = myList;
+	NODE node = head;
+	
+	for (size_t i = 0; i < size; ++i) {
+		node = node->new_LIST(myList);
+		node->value = (unsigned int) rand() % MAX_RAND_VALUE;
+		node = node->next;
+	}
+	
+	myList = head;
+}
+
 /**
 * Displays an error message about arguments
 * @author Thomas MEDARD
@@ -93,7 +111,7 @@ void initTabRand (int tab[], const size_t size) {
 void displayArgsErr(void) {
 	fprintf(stderr, "Need to precise a valid algorithim.\nValids algorithims are :\n");
 	
-	for (size_t i = 0; i < sizeof(algos) / sizeof(algos[0]) - 1; ++i) {
+	for (size_t i = 0; i < 9; ++i) {
 		fprintf(stderr, "%s, ", algos[i]);
 	}
 	fprintf(stderr, "\n");
@@ -128,7 +146,7 @@ FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize) {
 	}
 	
 	for (size_t i = 0; i < tableSize; ++i) {
-		fprintf(file, "%d%c", titlesTab[i], CSV_SEPARATOR);
+		fprintf(file, "%uz%c", titlesTab[i], CSV_SEPARATOR);
 	}
 	
 	fprintf(file, "\n");
@@ -210,13 +228,32 @@ void launchTest(const size_t sizeToTest) {
 	
     // Launching alarm
 	alarm(TIME_BEFORE_STOP);
+	
+	// If we want a chained list
+	int isList = 0;
+	LIST myList;
+	
+	// If we want a chained list
+	if (strcmp(chosenAlgo, SEQUENTIAL_INS_CHAINED) == 0) {
+		isList = 1;
+	}
 
 	// Testing NB_TEST_PER_SIZE times then getting the average result
 	for (int i = 0; i < NB_TEST_PER_SIZE; ++i) {
 		
+		// If we want a chained list
+		if (isList == 1) {
+			
+			
+			// Generating the list
+			initListRand(myList, sizeToTest)
+			
+			continue;
+		}
+
 		// Generating  its values
 		initTabRand(tab, sizeToTest);
-		
+				
 		// Begin time mesure
 		clock_t begin = clock();
 		
@@ -251,6 +288,10 @@ void chooseAlgo(char* arg) {
 		chosenAlgo = SEQUENTIAL_INS;
 		algo = testTime;
 	}
+	else if (strcmp(arg, SEQUENTIAL_INS_CHAINED) == 0) {
+		chosenAlgo = SEQUENTIAL_INS_CHAINED;
+		algo = testTime;
+	}
 	else if (strcmp(arg, DICHO_INS) == 0) {
 		chosenAlgo = DICHO_INS;
 		algo = dichoInser;
@@ -273,7 +314,7 @@ void chooseAlgo(char* arg) {
 	}
 	else if (strcmp(arg, QUICKSORT) == 0) {
 		chosenAlgo = QUICKSORT;
-		algo = testTime;
+		algo = quickSortMain;
 	}
 	else {
 		displayArgsErr();
