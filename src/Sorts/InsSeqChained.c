@@ -1,9 +1,48 @@
-void ins_seqChained ( int[] t, int size) {
-	int i,j,k,tmp;
-	for (i=1; i< size;{j=0; ++i;}) {
-		while ( t[i] > t[j] && j<= i) ++j;
-		tmp= t[i];
-		for (k=i; k>j; --k) t[k] = t[k-1];
-		t[j] = tmp;
-	}	
+#include "../list.h"
+
+#include <stdlib.h>
+
+void ins_seqChained (List *list) {
+	
+	list->view(list);
+	Node *currentNode = list->top->next;
+	printf("debug1\n");
+	Node *currentSortedNode = list->top;
+	Node *kNode;
+	Node *tmpNode;
+	
+	TYPE tmp;
+	
+	Node* nodes[list->length(list)];
+	
+	size_t i;
+	
+	while (currentNode->next) {
+		
+		while (currentNode->value > currentSortedNode->value && currentSortedNode != currentNode->next) {
+			currentSortedNode = currentSortedNode->next;
+		}
+		
+		tmp = currentNode->value;
+		
+		i = 0;
+		// Get all node from currentSortedNode to kNode
+		for (tmpNode = currentSortedNode; tmpNode != currentNode; tmpNode = tmpNode->next) {
+			nodes[i++] = tmpNode;
+		}	
+		// To get the last index
+		--i;
+		
+		for (kNode = currentNode; kNode != currentSortedNode; kNode = nodes[i--]) {
+			kNode->value = nodes[i - 1]->value;
+		}
+		
+		currentSortedNode->value = tmp;
+		
+		printf("debug2\n");
+		
+		
+		currentNode = currentNode->next;
+		currentSortedNode = list->top;
+	}
 }

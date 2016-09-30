@@ -8,14 +8,14 @@
  */
 void mergeTab(int tab[], const size_t left, const size_t middle, const size_t right) {
 	int* tmp = (int*) malloc((right - left + 1)*sizeof(int));
-	int tabLeft = left;
-	int tabRight = middle + 1;
+	size_t tabLeft = left;
+	size_t tabRight = middle + 1;
 	
-	for ( int i = left; i <= right; ++i) {
+	for ( size_t i = left; i <= right; ++i) {
 		tmp[i - left] = tab[i];
 	}
 	
-	for ( int i = left; i <= right; ++i) {
+	for ( size_t i = left; i <= right; ++i) {
 		
 		if (tabLeft == middle +1) {
 			break;

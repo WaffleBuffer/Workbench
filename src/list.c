@@ -100,6 +100,7 @@ List* new_List(){
 	List *This = malloc(sizeof(List));
 	
 	if(!This) {
+		perror("malloc");
 		return NULL;
 	}
 	

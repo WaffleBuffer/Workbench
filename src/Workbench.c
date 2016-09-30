@@ -1,7 +1,10 @@
-#include "list.h"
+#include "list.h" // List
+#include "bor-util.h" // SIGALRM
 
 // All sorts algotithims
 #include "Sorts/Bubbles.c"
+#include "Sorts/InsSeq.c"
+#include "Sorts/InsSeqChained.c"
 #include "Sorts/SelecPerm.c"
 #include "Sorts/DichoInser.c"
 #include "Sorts/Merge.c"
@@ -57,8 +60,8 @@
 // The csv separator used
 #define CSV_SEPARATOR ';'
 
-// The tested type
-typedef int TYPE;
+// The tested type. Declared in list.h
+//typedef int TYPE;
 
 // All the sizes to test
 const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZE6,
@@ -91,17 +94,12 @@ void initTabRand (int tab[], const size_t size) {
 	}//for
 }// initTabRand
 
-void initListRand(LIST* myList, const size_t size) {
-	LIST head = myList;
-	NODE node = head;
+void initListRand(List *list, const size_t size) {
+	list = new_List();
 	
 	for (size_t i = 0; i < size; ++i) {
-		node = node->new_LIST(myList);
-		node->value = (unsigned int) rand() % MAX_RAND_VALUE;
-		node = node->next;
+		list->push(list, (unsigned int) rand() % MAX_RAND_VALUE);
 	}
-	
-	myList = head;
 }
 
 /**
@@ -231,7 +229,7 @@ void launchTest(const size_t sizeToTest) {
 	
 	// If we want a chained list
 	int isList = 0;
-	LIST myList;
+	List *list;
 	
 	// If we want a chained list
 	if (strcmp(chosenAlgo, SEQUENTIAL_INS_CHAINED) == 0) {
@@ -244,11 +242,23 @@ void launchTest(const size_t sizeToTest) {
 		// If we want a chained list
 		if (isList == 1) {
 			
-			
 			// Generating the list
-			initListRand(myList, sizeToTest)
+			initListRand(list, sizeToTest);
+			
+			// Begin time mesure
+			clock_t begin = clock();
+			
+			ins_seqChained(list);
+
+			// End time mesure
+			clock_t end = clock();
+			
+			list->free(list);
 			
 			continue;
+			
+			// Calculating passed time
+			resultsSum += ((double)end - (double)begin) / CLOCKS_PER_SEC * 1000.0;
 		}
 
 		// Generating  its values
@@ -286,11 +296,11 @@ void chooseAlgo(char* arg) {
 	}
 	else if (strcmp(arg, SEQUENTIAL_INS) == 0) {
 		chosenAlgo = SEQUENTIAL_INS;
-		algo = testTime;
+		algo = ins_seq;
 	}
 	else if (strcmp(arg, SEQUENTIAL_INS_CHAINED) == 0) {
+		// Specific case, so specific algo
 		chosenAlgo = SEQUENTIAL_INS_CHAINED;
-		algo = testTime;
 	}
 	else if (strcmp(arg, DICHO_INS) == 0) {
 		chosenAlgo = DICHO_INS;
