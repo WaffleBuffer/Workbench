@@ -145,7 +145,7 @@ FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize) {
 	}
 	
 	for (size_t i = 0; i < tableSize; ++i) {
-		fprintf(file, "%uz%c", titlesTab[i], CSV_SEPARATOR);
+		fprintf(file, "%zu%c", titlesTab[i], CSV_SEPARATOR);
 	}
 	
 	fprintf(file, "\n");
@@ -205,7 +205,7 @@ void creatReport(void) {
 * @author Thomas MEDARD
 */
 void alarmHandler(int sig) {
-	printf("Test too long on size %d\n", sizesTab[currentSize]);
+	printf("Test too long on size %zu\n", sizesTab[currentSize]);
 	
 	creatReport();
 	
@@ -281,7 +281,7 @@ void launchTest(const size_t sizeToTest) {
 	const double finalRes = resultsSum / (double) NB_TEST_PER_SIZE;
 	results[currentSize] = finalRes;
 	
-	printf("for size %d : %lf ms\n", sizeToTest, finalRes);
+	printf("for size %zu : %lf ms\n", sizeToTest, finalRes);
 	
 }
 
