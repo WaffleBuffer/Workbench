@@ -16,7 +16,7 @@
 #include <string.h> // strcmp
 #include <unistd.h> // sleep
 #include <string.h> // strcpy_s
-#include <signal.h> //SA_RESTART
+#include <sys/signal.h> //SA_RESTART
 
 // Table sizes to test
 #define SIZE1  100
