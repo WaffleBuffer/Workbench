@@ -1,10 +1,10 @@
-#include <
+#include <stdlib.h>
 
 #ifndef LIST__H
 #define LIST__H
 
 #define NODE_ALLOC_ERROR 1
-#define PILE_EMPTY      -1
+#define LIST_EMPTY      -1
 
 #ifdef __cplusplus
 	extern "C" {
@@ -15,7 +15,7 @@ typedef int TYPE;
 
 typedef struct Node {
 	TYPE value;
-	struct Node *prec;
+	struct Node *next;
 } Node;
 
 typedef struct List {
@@ -33,14 +33,14 @@ typedef struct List {
 List List_create(void);
 List* new_List(void);
 
-int List_push(List*, const TYPE);
-TYPE List_Pop(List*);
+/*int List_push(List*, const TYPE);
+TYPE List_pop(List*);
 void List_clear(List*); 
 int List_length(List*);
 void List_view(List*);
 
 void List_free(List*);
-void List_newFree(List*);
+void List_newFree(List*);*/
 
 #ifdef __cplusplus
 }
