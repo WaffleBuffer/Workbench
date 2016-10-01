@@ -96,7 +96,6 @@ void initTabRand (int tab[], const size_t size) {
 }// initTabRand
 
 void initListRand(List *list, const size_t size) {
-	list = new_List();
 	
 	for (size_t i = 0; i < size; ++i) {
 		list->push(list, (unsigned int) rand() % MAX_RAND_VALUE);
@@ -243,6 +242,8 @@ void launchTest(const size_t sizeToTest) {
 		// If we want a chained list
 		if (isList == 1) {
 			
+			list = new_List();
+			
 			// Generating the list
 			initListRand(list, sizeToTest);
 			
@@ -256,10 +257,10 @@ void launchTest(const size_t sizeToTest) {
 			
 			list->free(list);
 			
-			continue;
-			
 			// Calculating passed time
 			resultsSum += ((double)end - (double)begin) / CLOCKS_PER_SEC * 1000.0;
+			
+			continue;
 		}
 
 		// Generating  its values

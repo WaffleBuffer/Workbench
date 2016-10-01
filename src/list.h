@@ -11,7 +11,7 @@
 #endif
 
 // The type of the list
-typedef int TYPE;
+typedef unsigned int TYPE;
 
 typedef struct Node {
 	TYPE value;

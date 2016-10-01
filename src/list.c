@@ -64,7 +64,6 @@ void List_view(List *This){
 
 void List_free(List *This){
 	List_clear(This);
-	puts("Destruction de la pile statique.\n");
 }
 
 void List_newFree(List *This){
@@ -72,7 +71,6 @@ void List_newFree(List *This){
 		List_clear(This);
 	}
 	free(This);        
-	puts("Destruction de la pile dynamique.\n");
 }
 
 static void List_init(List *This){

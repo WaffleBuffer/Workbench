@@ -4,9 +4,7 @@
 
 void ins_seqChained (List *list) {
 	
-	list->view(list);
 	Node *currentNode = list->top->next;
-	printf("debug1\n");
 	Node *currentSortedNode = list->top;
 	Node *kNode;
 	Node *tmpNode;
@@ -16,6 +14,8 @@ void ins_seqChained (List *list) {
 	Node* nodes[list->length(list)];
 	
 	size_t i;
+	
+	printf("debug\n");
 	
 	while (currentNode->next) {
 		
@@ -37,10 +37,7 @@ void ins_seqChained (List *list) {
 			kNode->value = nodes[i - 1]->value;
 		}
 		
-		currentSortedNode->value = tmp;
-		
-		printf("debug2\n");
-		
+		currentSortedNode->value = tmp;		
 		
 		currentNode = currentNode->next;
 		currentSortedNode = list->top;
