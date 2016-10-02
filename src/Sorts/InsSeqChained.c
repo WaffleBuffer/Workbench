@@ -15,8 +15,6 @@ void ins_seqChained (List *list) {
 	
 	size_t i;
 	
-	printf("debug\n");
-	
 	while (currentNode->next) {
 		
 		while (currentNode->value > currentSortedNode->value && currentSortedNode != currentNode->next) {
