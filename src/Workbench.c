@@ -70,7 +70,7 @@ const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZ
 						SIZE13, SIZE14, MAX};
 
 // All the available algorithims
-const char* algos[9] = {BUBBLES, SEQUENTIAL_INS, SEQUENTIAL_INS_CHAINED, DICHO_INS, SELEC_PERM, 
+const char* algos[9] = {BUBBLES, SEQUENTIAL_INS, SEQUENTIAL_INS_CHAINED, DICHO_INS, SELEC_PERM,
 						MERGE, QUICKSORT, FIND_TREES, STACK};
 
 // The name of the chosen algorithim
@@ -96,7 +96,7 @@ void initTabRand (int tab[], const size_t size) {
 }// initTabRand
 
 void initListRand(List *list, const size_t size) {
-	
+
 	for (size_t i = 0; i < size; ++i) {
 		list->push(list, (unsigned int) rand() % MAX_RAND_VALUE);
 	}
@@ -108,7 +108,7 @@ void initListRand(List *list, const size_t size) {
 */
 void displayArgsErr(void) {
 	fprintf(stderr, "Need to precise a valid algorithim.\nValids algorithims are :\n");
-	
+
 	for (size_t i = 0; i < 9; ++i) {
 		fprintf(stderr, "%s, ", algos[i]);
 	}
@@ -135,27 +135,27 @@ void testTime(int tab[], const size_t tabSize) {
 * @author Thomas MEDARD
 */
 FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize) {
-	
+
 	FILE* file = fopen(fileName, "w");
-	
+
 	if (file == NULL) {
 		perror("fopen");
 		exit(1);
 	}
-	
+
 	for (size_t i = 0; i < tableSize; ++i) {
 		fprintf(file, "%zu%c", titlesTab[i], CSV_SEPARATOR);
 	}
-	
+
 	fprintf(file, "\n");
 	fclose(file);
-	
+
 	return file;
 }
 
 /**
 * Write a line of element in a csv file (that must exists).
-* 
+*
 * @param fileName the name of the file to write into.
 * @param tab the elements to write.
 * @tableSize the size of tab, because we can't know it here.
@@ -163,38 +163,38 @@ FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize) {
 */
 void writeLineCsv(const char* fileName, const double tab[], const size_t tableSize) {
 	FILE* file = fopen(fileName, "a");
-	
+
 	if (file == NULL) {
 		perror("fopen");
 		exit(1);
 	}
-	
+
 	for (size_t i = 0; i < tableSize; ++i) {
 		fprintf(file, "%lf%c", tab[i], CSV_SEPARATOR);
 	}
-	
+
 	fprintf(file, "\n");
 	fclose(file);
 }
 
 /**
 * Create the csv report for the current tested test.
-* @author Thomas MEDARD 
+* @author Thomas MEDARD
 */
 void creatReport(void) {
-	
+
 	char fileName[29];
-	
+
 	fileName[0] = '.';
 	fileName[1] = '.';
 	fileName[2] = '/';
-	
+
 	strcat(fileName, chosenAlgo);
 	strcat(fileName, ".csv");
 
 	createCSV(fileName, sizesTab, NB_SIZE_TO_TEST);
 	writeLineCsv(fileName, results, currentSize);
-	
+
 	printf("Report %s created", fileName);
 }
 
@@ -205,9 +205,9 @@ void creatReport(void) {
 */
 void alarmHandler(int sig) {
 	printf("Test too long on size %zu\n", sizesTab[currentSize]);
-	
+
 	creatReport();
-	
+
 	exit(0);
 }
 
@@ -220,17 +220,17 @@ void launchTest(const size_t sizeToTest) {
 	srand(time(0));
 	// Creating the table
 	int tab[sizeToTest];
-	
+
 	// All results
 	double resultsSum = 0.0;
-	
+
     // Launching alarm
 	alarm(TIME_BEFORE_STOP);
-	
+
 	// If we want a chained list
 	int isList = 0;
 	List *list;
-	
+
 	// If we want a chained list
 	if (strcmp(chosenAlgo, SEQUENTIAL_INS_CHAINED) == 0) {
 		isList = 1;
@@ -238,52 +238,52 @@ void launchTest(const size_t sizeToTest) {
 
 	// Testing NB_TEST_PER_SIZE times then getting the average result
 	for (int i = 0; i < NB_TEST_PER_SIZE; ++i) {
-		
+
 		// If we want a chained list
 		if (isList == 1) {
-			
+
 			list = new_List();
-			
+
 			// Generating the list
 			initListRand(list, sizeToTest);
-			
+
 			// Begin time mesure
 			clock_t begin = clock();
-			
+
 			ins_seqChained(list);
 
 			// End time mesure
 			clock_t end = clock();
-			
+
 			list->free(list);
-			
+
 			// Calculating passed time
 			resultsSum += ((double)end - (double)begin) / CLOCKS_PER_SEC * 1000.0;
-			
+
 			continue;
 		}
 
 		// Generating  its values
 		initTabRand(tab, sizeToTest);
-				
+
 		// Begin time mesure
 		clock_t begin = clock();
-		
+
 		// Calling the chosen algorithim
 		algo(tab, sizeToTest);
-		
+
 		// End time mesure
 		clock_t end = clock();
-		
+
 		// Calculating passed time
 		resultsSum += ((double)end - (double)begin) / CLOCKS_PER_SEC * 1000.0;
 	}
-	
+
 	const double finalRes = resultsSum / (double) NB_TEST_PER_SIZE;
 	results[currentSize] = finalRes;
-	
+
 	printf("for size %zu : %lf ms\n", sizeToTest, finalRes);
-	
+
 }
 
 /**
@@ -339,19 +339,19 @@ void chooseAlgo(char* arg) {
 * @author Thomas MEDARD, Rémi SEGRETAIN
 */
 int main(int argc, char* argv[]) {
-	
+
 	// Checking arguments
 	if (argc < 2) {
 		displayArgsErr();
 		exit(1);
 	}
-	
+
 	// Affecting the right algorithim depending on the argument
 	chooseAlgo(argv[1]);
-	
+
 	// Affecting SIGALRM handler
 	bor_signal(SIGALRM, alarmHandler, SA_RESTART);
-	
+
 	// Launching tests per sizes
 	for (currentSize = 0; currentSize < NB_SIZE_TO_TEST; ++currentSize) {
 		launchTest(sizesTab[currentSize]);
