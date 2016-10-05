@@ -1,24 +1,27 @@
 SHELL  = /bin/bash
 CC     = gcc
 CFLAGS = -Wall -W -std=c99 -pedantic -I.
-LIBS   =
 
 LINKER   = gcc -o
 # linking flags here
 LFLAGS   = -Wall -I. -lm
 
+#INCDIR   = src/Sorts
 SRCDIR   = src
 OBJDIR   = obj
 BINDIR   = bin
 
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(SRCDIR)/*.h)
+LIBS     := $(wildcard $(LIBSDIR)/*.c)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+#LIBSOBJ  := $(LIBS:$(LIBSDIR)/%.c=$(OBJDIR):%.o)
 rm       = rm -f
 
 # project name (generate executable with this name)
 TARGET   = Workbench
 
+$(OBJDIR)/$(TARGET).o: $(LIBS)
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LINKER) $@ $(LFLAGS) $(OBJECTS)
@@ -28,9 +31,6 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 
-$(EXECSUTIL) : %: %.o bor-util.o
-	$(CC) -o $@ $@.o bor-util.o $(LIBS)
-	
 .c.o :
 	$(CC) -c $(CFLAGS) $*.c
 
