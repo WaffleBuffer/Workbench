@@ -53,7 +53,7 @@
 #define NB_SIZE_TO_TEST 15
 
 // Maximum time allowed to a test (5 minutes)
-#define TIME_BEFORE_STOP 300
+#define TIME_BEFORE_STOP 10
 
 // Maximum value for a random element
 #define MAX_RAND_VALUE 100
@@ -84,17 +84,23 @@ double results[15];
 size_t currentSize;
 
 /**
-* Initialize all values in tab of size size to a random number. tab must have been set to size size.
-* @param tab The table to generate values into. Must have been set to size size.
-* @param size the size of tab.
-* @author Rémi SEGRETAIN
-*/
+ * Initialize all values in tab of size size to a random number. tab must have been set to size size.
+ * @param tab The table to generate values into. Must have been set to size size.
+ * @param size the size of tab. Must be > 0.
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void initTabRand (int tab[], const size_t size) {
 	for (size_t i = 0; i < size; ++i) {
 		tab[i] = (unsigned int) rand() % MAX_RAND_VALUE;
 	}//for
 }// initTabRand
 
+/**
+ * Add list with size random number. list must have been initialized
+ * @param tab The table to generate values into. Must have been initialized
+ * @param size the number of value to add to list. Must be > 0.
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void initListRand(List *list, const size_t size) {
 
 	for (size_t i = 0; i < size; ++i) {
@@ -103,9 +109,9 @@ void initListRand(List *list, const size_t size) {
 }
 
 /**
-* Displays an error message about arguments
-* @author Thomas MEDARD
-*/
+ * Displays an error message about needed arguments
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void displayArgsErr(void) {
 	fprintf(stderr, "Need to precise a valid algorithim.\nValids algorithims are :\n");
 
@@ -116,24 +122,23 @@ void displayArgsErr(void) {
 }
 
 /**
-* Placeholder function to replace unfinished sorting algorithim.
-* @param tab the table to test
-* @param tabSize the size of tab
-* @author Thomas MEDARD
-*/
+ * Placeholder function to replace unfinished sorting algorithim.
+ * @param tab the table to test
+ * @param tabSize the size of tab
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void testTime(int tab[], const size_t tabSize) {
 	sleep(1);
 }
 
 /**
-* Create (or replace) a csv file names fileName and write all elements in titleTab.
-*
-* @param fileName The name of the file that should be created or replaced.
-* @param titleTab The first elements wrote in a line. Correspond to a line of titles.
-* @param tableSize The size of titleTab, because we can't know it here.
-* @return the file descriptor of the csv file.
-* @author Thomas MEDARD
-*/
+ * Create (or replace) a csv file named fileName and write all elements of titleTab inside.
+ * @param fileName The name of the file that should be created or replaced.
+ * @param titleTab Elements writen in a line. Correspond to a line of titles. Must be initialized.
+ * @param tableSize The size of titleTab. Must be > 0.
+ * @return The file descriptor (of second level) of the csv file.
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize) {
 
 	FILE* file = fopen(fileName, "w");
@@ -154,13 +159,12 @@ FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize) {
 }
 
 /**
-* Write a line of element in a csv file (that must exists).
-*
-* @param fileName the name of the file to write into.
-* @param tab the elements to write.
-* @tableSize the size of tab, because we can't know it here.
-* @author Thomas MEDARD
-*/
+ * Write a line of element in a csv file (that must exists).
+ * @param fileName the name of the file to write into. This file must exists.
+ * @param tab The elements to write. Must be initilized.
+ * @param tableSize the size of tab. Must be > 0.
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void writeLineCsv(const char* fileName, const double tab[], const size_t tableSize) {
 	FILE* file = fopen(fileName, "a");
 
@@ -178,12 +182,12 @@ void writeLineCsv(const char* fileName, const double tab[], const size_t tableSi
 }
 
 /**
-* Create the csv report for the current tested test.
-* @author Thomas MEDARD
-*/
+ * Create the csv report for the current tested test. The test must be over.
+ * @author Thomas MEDARD, Remi SEGETAIN
+ */
 void creatReport(void) {
 
-	char fileName[29];
+	char fileName[32];
 
 	fileName[0] = '.';
 	fileName[1] = '.';
@@ -195,15 +199,18 @@ void creatReport(void) {
 	createCSV(fileName, sizesTab, NB_SIZE_TO_TEST);
 	writeLineCsv(fileName, results, currentSize);
 
-	printf("Report %s created", fileName);
+	printf("Report %s created\n", fileName);
 }
 
 /**
-* Function called on SIGALRM (when a test is too long).
-* @param sig the code of the signal (unused but needed).
-* @author Thomas MEDARD
-*/
+ * Function called on SIGALRM (when a test is too long).
+ * @param sig the code of the signal (unused).
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void alarmHandler(int sig) {
+	// Suppress compiler warning about unused argument
+	(void)sig;
+	
 	printf("Test too long on size %zu\n", sizesTab[currentSize]);
 
 	creatReport();
@@ -214,7 +221,7 @@ void alarmHandler(int sig) {
 /**
 * Function to lauch a test of sizeToTest size.
 * @param sizeToTest The size of the table to test.
-* @author Thomas MEDARD, Rémi SEGRETAIN
+* @author Thomas MEDARD, Remi SEGRETAIN
 */
 void launchTest(const size_t sizeToTest) {
 	srand(time(0));
@@ -261,7 +268,7 @@ void launchTest(const size_t sizeToTest) {
 			resultsSum += ((double)end - (double)begin) / CLOCKS_PER_SEC * 1000.0;
 
 			continue;
-		}
+		} // End chained list test
 
 		// Generating  its values
 		initTabRand(tab, sizeToTest);

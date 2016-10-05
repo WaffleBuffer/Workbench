@@ -7,13 +7,8 @@ void ins_seqChained (List *list) {
 	Node *currentNode = list->top->next;
 	Node *currentSortedNode = list->top;
 	Node *kNode;
-	Node *tmpNode;
 
 	TYPE tmp;
-
-	Node* nodes[list->length(list)];
-
-	size_t i;
 
 	while (currentNode->next != NULL) {
 
