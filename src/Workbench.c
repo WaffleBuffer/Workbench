@@ -1,5 +1,5 @@
-#include "list.h" // List
 #include "bor-util.h" // SIGALRM
+#include "list.h" // List
 
 // All sorts algotithims
 #include "Sorts/Bubbles.c"
