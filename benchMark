@@ -1,0 +1,28 @@
+# !/bin/bash
+
+echo "Tri a bulle :"
+bin/Workbench Bubbles
+
+echo "Tri par insertion sequentielle :"
+bin/Workbench SequentialInsertion
+
+echo "Tri par insertion sequentielle (liste chainee) :"
+bin/Workbench SequentInsChained
+
+echo "Tri par insertion dichotomique :"
+bin/Workbench DichotomousInsertion
+
+echo "Tri par selection/permutation :"
+bin/Workbench SelectionPermutation
+
+echo "Tri par fusion :"
+bin/Workbench Merge
+
+echo "Tri rapide :"
+bin/Workbench QuickSort
+
+#echo "Tri avec arbre AVL :"
+#bin/Workbench FindTrees
+
+#echo "Tri par tas :"
+#bin/Workbench Stack
