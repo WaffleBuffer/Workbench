@@ -53,7 +53,7 @@
 #define NB_SIZE_TO_TEST 15
 
 // Maximum time allowed to a test (5 minutes)
-#define TIME_BEFORE_STOP 10
+#define TIME_BEFORE_STOP 300
 
 // Maximum value for a random element
 #define MAX_RAND_VALUE 100
@@ -190,8 +190,7 @@ void creatReport(void) {
 	char fileName[32];
 
 	fileName[0] = '.';
-	fileName[1] = '.';
-	fileName[2] = '/';
+	fileName[1] = '/';
 
 	strcat(fileName, chosenAlgo);
 	strcat(fileName, ".csv");
@@ -296,7 +295,7 @@ void launchTest(const size_t sizeToTest) {
 /**
 * Affect chooseAlgo and algo corresponding to the argument.
 * @param arg The chosen algo. If it's invalid, will exit with error message.
-* @author Thomas MEDARD
+* @author Thomas MEDARD, Remi SEGRETAIN
 */
 void chooseAlgo(char* arg) {
 	if (strcmp(arg, BUBBLES) == 0) {
@@ -342,7 +341,9 @@ void chooseAlgo(char* arg) {
 }
 
 /**
-* The main : make all test for on sorting algorithim
+* The main : make all tests for one sorting algorithim
+* @param argc The number of arguments. Must be > 1.
+* @param argv The arguments. argv[1] must be initialized and a size_t (under string format).
 * @author Thomas MEDARD, Rémi SEGRETAIN
 */
 int main(int argc, char* argv[]) {
