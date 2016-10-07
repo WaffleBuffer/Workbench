@@ -1,7 +1,7 @@
 #include "bor-util.h" // SIGALRM
 #include "list.h" // List
 
-// All sorts algotithims
+// All sorting algotithims
 #include "Sorts/Bubbles.c"
 #include "Sorts/InsSeq.c"
 #include "Sorts/InsSeqChained.c"
@@ -9,6 +9,7 @@
 #include "Sorts/DichoInser.c"
 #include "Sorts/Merge.c"
 #include "Sorts/QuickSort.c"
+#include "Sorts/BinaryTreeSort.c"
 
 #include <stdio.h>  // printf
 #include <stdlib.h> // itoa
@@ -43,7 +44,7 @@
 #define SELEC_PERM     "SelectionPermutation"
 #define MERGE 		   "Merge"
 #define QUICKSORT	   "QuickSort"
-#define FIND_TREES     "FindTrees"
+#define B_TREE         "BinaryTree"
 #define STACK 		   "Stack"
 
 // Number of test per size
@@ -52,7 +53,7 @@
 // Number of test to do
 #define NB_SIZE_TO_TEST 15
 
-// Maximum time allowed to a test (5 minutes)
+// Maximum time allowed for a size test (5 minutes)
 #define TIME_BEFORE_STOP 300
 
 // Maximum value for a random element
@@ -71,7 +72,7 @@ const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZ
 
 // All the available algorithims
 const char* algos[9] = {BUBBLES, SEQUENTIAL_INS, SEQUENTIAL_INS_CHAINED, DICHO_INS, SELEC_PERM,
-						MERGE, QUICKSORT, FIND_TREES, STACK};
+						MERGE, QUICKSORT, B_TREE, STACK};
 
 // The name of the chosen algorithim
 char* chosenAlgo;
@@ -322,9 +323,9 @@ void chooseAlgo(char* arg) {
 		chosenAlgo = MERGE;
 		algo = merge;
 	}
-	else if (strcmp(arg, FIND_TREES) == 0) {
-		chosenAlgo = FIND_TREES;
-		algo = testTime;
+	else if (strcmp(arg, B_TREE) == 0) {
+		chosenAlgo = B_TREE;
+		algo = bTreeSort;
 	}
 	else if (strcmp(arg, STACK) == 0) {
 		chosenAlgo = STACK;
