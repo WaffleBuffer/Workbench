@@ -1,3 +1,5 @@
+#include "../Utils.c"
+
 #include <stdlib.h>
 /*
 * Sort an int tab with dichotomous/insertion algorithim.
@@ -5,9 +7,9 @@
 * @param tabSize the size of tab.
 * @author Thomas MEDARD
 */
-void dichoInser (int tab[], const size_t tabSize) {
+void dichoInser (TYPE tab[], const size_t tabSize) {
 	size_t i, j, left, right, middle;
-	int save;
+	TYPE save;
 
 	// Main loop
 	for (i = 1; i < tabSize; ++i) {

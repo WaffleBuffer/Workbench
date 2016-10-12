@@ -1,3 +1,5 @@
+#include "Utils.c"
+
 #include <stdlib.h>
 
 #ifndef LIST__H
@@ -9,9 +11,6 @@
 #ifdef __cplusplus
 	extern "C" {
 #endif
-
-// The type of the list
-typedef unsigned int TYPE;
 
 typedef struct Node {
 	TYPE value;
@@ -32,15 +31,6 @@ typedef struct List {
 
 List List_create(void);
 List* new_List(void);
-
-/*int List_push(List*, const TYPE);
-TYPE List_pop(List*);
-void List_clear(List*); 
-int List_length(List*);
-void List_view(List*);
-
-void List_free(List*);
-void List_newFree(List*);*/
 
 #ifdef __cplusplus
 }

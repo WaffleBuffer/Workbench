@@ -1,3 +1,5 @@
+#include "../Utils.c"
+
 #include <stdlib.h>
 
 /*
@@ -6,11 +8,11 @@
 * @param tabSize the size of tab.
 * @author Thomas MEDARD
 */
-void bubblesSort (int tab[], const size_t tabSize) {
+void bubblesSort (TYPE tab[], const size_t tabSize) {
 
     int sorted = 0;
-	int tmp;
-	int iteration = 1;
+	TYPE tmp;
+	size_t iteration = 1;
 	while (!sorted) {
 		sorted = 1;
 		

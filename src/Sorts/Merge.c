@@ -1,3 +1,5 @@
+#include "../Utils.c"
+
 /**
  * Merge two sorted tables (which are in fact inside tab).
  * @param tab The table containing all values.
@@ -6,8 +8,8 @@
  * @param endTab2 The ending index of the second tab.
  * @author Thomas MEDARD
  */
-void mergeTab(int tab[], const size_t left, const size_t middle, const size_t right) {
-	int* tmp = (int*) malloc((right - left + 1)*sizeof(int));
+void mergeTab(TYPE tab[], const size_t left, const size_t middle, const size_t right) {
+	TYPE* tmp = (TYPE*) malloc((right - left + 1)*sizeof(TYPE));
 	size_t tabLeft = left;
 	size_t tabRight = middle + 1;
 	
@@ -37,7 +39,7 @@ void mergeTab(int tab[], const size_t left, const size_t middle, const size_t ri
  * @param end The ending index.
  * @author Thomas MEDARD
  */
-void mergesort(int tab[], size_t begin, size_t end) {        
+void mergesort(TYPE tab[], size_t begin, size_t end) {        
     if(begin < end) {
 		// Middle
         size_t mid = (begin + end) / 2;		 
@@ -58,7 +60,7 @@ void mergesort(int tab[], size_t begin, size_t end) {
  * @param tabSize the size of tab.
  * @author Thomas MEDARD
  */
-void merge (int tab[], size_t tabSize) {
+void merge (TYPE tab[], size_t tabSize) {
 	
 	mergesort(tab, 0, tabSize - 1);
 }

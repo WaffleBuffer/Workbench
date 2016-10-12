@@ -1,5 +1,6 @@
 #include "bor-util.h" // SIGALRM
 #include "list.h" // List
+#include "Utils.c" //TYPE
 
 // All sorting algotithims
 #include "Sorts/Bubbles.c"
@@ -10,6 +11,7 @@
 #include "Sorts/Merge.c"
 #include "Sorts/QuickSort.c"
 #include "Sorts/BinaryTreeSort.c"
+#include "Sorts/HeapSort.c"
 
 #include <stdio.h>  // printf
 #include <stdlib.h> // itoa
@@ -45,7 +47,7 @@
 #define MERGE 		   "Merge"
 #define QUICKSORT	   "QuickSort"
 #define B_TREE         "BinaryTree"
-#define STACK 		   "Stack"
+#define HEAP 		   "HeapSort"
 
 // Number of test per size
 #define NB_TEST_PER_SIZE 20
@@ -63,7 +65,6 @@
 #define CSV_SEPARATOR ';'
 
 // The tested type. Declared in list.h
-//typedef int TYPE;
 
 // All the sizes to test
 const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZE6,
@@ -72,12 +73,12 @@ const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZ
 
 // All the available algorithims
 const char* algos[9] = {BUBBLES, SEQUENTIAL_INS, SEQUENTIAL_INS_CHAINED, DICHO_INS, SELEC_PERM,
-						MERGE, QUICKSORT, B_TREE, STACK};
+						MERGE, QUICKSORT, B_TREE, HEAP};
 
 // The name of the chosen algorithim
 char* chosenAlgo;
 // The pointer to the chosen algorithim
-void (*algo)(int tab[], const size_t tabSize);
+void (*algo)(TYPE tab[], const size_t tabSize);
 
 // All the results
 double results[15];
@@ -90,9 +91,9 @@ size_t currentSize;
  * @param size the size of tab. Must be > 0.
  * @author Thomas MEDARD, Remi SEGRETAIN
  */
-void initTabRand (int tab[], const size_t size) {
+void initTabRand (TYPE tab[], const size_t size) {
 	for (size_t i = 0; i < size; ++i) {
-		tab[i] = (unsigned int) rand() % MAX_RAND_VALUE;
+		tab[i] = (TYPE) rand() % MAX_RAND_VALUE;
 	}//for
 }// initTabRand
 
@@ -128,7 +129,9 @@ void displayArgsErr(void) {
  * @param tabSize the size of tab
  * @author Thomas MEDARD, Remi SEGRETAIN
  */
-void testTime(int tab[], const size_t tabSize) {
+void testTime(TYPE tab[], const size_t tabSize) {
+	(void) tab;
+	(void) tabSize;
 	sleep(1);
 }
 
@@ -226,7 +229,7 @@ void alarmHandler(int sig) {
 void launchTest(const size_t sizeToTest) {
 	srand(time(0));
 	// Creating the table
-	int tab[sizeToTest];
+	TYPE tab[sizeToTest];
 
 	// All results
 	double resultsSum = 0.0;
@@ -244,7 +247,7 @@ void launchTest(const size_t sizeToTest) {
 	}
 
 	// Testing NB_TEST_PER_SIZE times then getting the average result
-	for (int i = 0; i < NB_TEST_PER_SIZE; ++i) {
+	for (size_t i = 0; i < NB_TEST_PER_SIZE; ++i) {
 
 		// If we want a chained list
 		if (isList == 1) {
@@ -272,7 +275,7 @@ void launchTest(const size_t sizeToTest) {
 
 		// Generating  its values
 		initTabRand(tab, sizeToTest);
-
+		
 		// Begin time mesure
 		clock_t begin = clock();
 
@@ -327,9 +330,9 @@ void chooseAlgo(char* arg) {
 		chosenAlgo = B_TREE;
 		algo = bTreeSort;
 	}
-	else if (strcmp(arg, STACK) == 0) {
-		chosenAlgo = STACK;
-		algo = testTime;
+	else if (strcmp(arg, HEAP) == 0) {
+		chosenAlgo = HEAP;
+		algo = heapSort;
 	}
 	else if (strcmp(arg, QUICKSORT) == 0) {
 		chosenAlgo = QUICKSORT;

@@ -1,3 +1,5 @@
+#include "../Utils.c"
+
 #include <stdlib.h>
 /*
 * Sort an int tab with selection/permutation algorithim.
@@ -5,9 +7,9 @@
 * @param tabSize the size of tab.
 * @author Thomas MEDARD
 */
-void selecPerm (int tab[], const size_t tabSize) {
-	size_t i, j;
-    int min, save;
+void selecPerm (TYPE tab[], const size_t tabSize) {
+	size_t i, j, min;
+    TYPE save;
 
 	for (i = 0; i < tabSize - 1; ++i) {
 		j = i + 1;
