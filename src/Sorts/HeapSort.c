@@ -2,8 +2,17 @@
 
 #include <stdlib.h>
 
+// When we use Heap, we know we use a Heap like array
 typedef TYPE Heap[];
 
+
+/**
+ * Add a value to a Heap.
+ * @param heap the Heap to add he value into.
+ * @param index The last index of heap. When called, index should be equal to the size of heap - 1.
+ * @param value The value to insert.
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void addHeap(Heap heap, const size_t index, const TYPE value) {
 	const size_t parent = (index - 1) / 2;
 	heap[index] = value;
@@ -14,12 +23,24 @@ void addHeap(Heap heap, const size_t index, const TYPE value) {
 	}
 }
 
+/**
+ * Convert an array into a Heap like array.
+ * @param tab The array to convert.
+ * @param tabSize The size of tab.
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void createHeap(TYPE tab[], const size_t tabSize) {
 	for (size_t i = 0; i < tabSize; ++i) {
 		addHeap(tab, i, tab[i]);
 	}
 }
 
+/**
+ * Delete tha max value from a Heap and keep the Heap format.
+ * @param heap The Heap to delete the max value from.
+ * @param heapSize a pointer to the size of heap.
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void deleteMaxHeapValue(Heap heap, size_t *heapSize) {
 	size_t i, left, right, max;
 	i = 0;
@@ -57,6 +78,12 @@ void deleteMaxHeapValue(Heap heap, size_t *heapSize) {
 	}
 }
 
+/**
+ * Sort an array using Heap format.
+ * @param tab The array to sort.
+ * @param tabSize The size of tab.
+ * @author Thomas MEDARD, Remi SEGRETAIN
+ */
 void heapSort(TYPE tab[], const size_t tabSize) {
 	
 	createHeap(tab, tabSize);

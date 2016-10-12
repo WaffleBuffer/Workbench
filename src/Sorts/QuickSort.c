@@ -8,30 +8,44 @@
 	tab[y] = tmp;
 }*/
 
-void putPivot (TYPE tab[], size_t left, size_t right, size_t *p) {
+void putPivot (TYPE tab[], const size_t left, const size_t right, size_t *p) {
 	*p = left;
 	TYPE tmp;
+	
+	//printf("left : %zu right : %zu\n", left, right);
 	for (size_t i = left + 1; i <= right; ++i) {
+		//printf("%zu : %zu\n", i, right);
 		if (tab[i] < tab[left]) {
 			
+			
+			++(*p);
+			//printf("debug1.0\n");
 			tmp = tab[i];
-			tab[i] = tab[++*p];
-			tab[++*p] = tmp;
+			//printf("debug1.1\n");
+			tab[i] = tab[*p];
+			//printf("debug1.2\n");
+			tab[*p] = tmp;
+			//printf("debug1.3\n");
 		}
 	}
 	
+	//printf("Après\n");
 	tmp = tab[left];
 	tab[left] = tab[*p];
 	tab[*p] = tmp;
+	
+	//printf("fin\n");
 	//swap (tab, left, *p);
 }
 
-void quickSort (TYPE tab[], size_t left, size_t right) {
+void quickSort (TYPE tab[], const size_t left, const size_t right) {
 	if (left < right) {
 		size_t pivot;
 		putPivot  (tab, left, right, &pivot);
-		quickSort (tab, left, pivot - 1);
-		quickSort (tab, pivot + 1, right);
+		if (pivot - left >= 1) {
+			quickSort (tab, left, pivot - 1);
+			quickSort (tab, pivot + 1, right);
+		}
 	}
 }
 
