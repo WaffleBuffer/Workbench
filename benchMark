@@ -28,9 +28,9 @@ echo "Tri rapide :"
 bin/Workbench QuickSort
 echo
 
-#echo "Tri avec arbre AVL :"
-#bin/Workbench FindTrees
-#echo
+echo "Tri avec arbre AVL :"
+bin/Workbench FindTrees
+echo
 
 echo "Tri par tas :"
 bin/Workbench HeapSort
