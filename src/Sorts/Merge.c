@@ -12,13 +12,13 @@ void mergeTab(TYPE tab[], const size_t left, const size_t middle, const size_t r
 	TYPE* tmp = (TYPE*) malloc((right - left + 1)*sizeof(TYPE));
 	size_t tabLeft = left;
 	size_t tabRight = middle + 1;
-	
+
 	for ( size_t i = left; i <= right; ++i) {
 		tmp[i - left] = tab[i];
 	}
-	
+
 	for ( size_t i = left; i <= right; ++i) {
-		
+
 		if (tabLeft == middle +1) {
 			break;
 		}
@@ -31,6 +31,7 @@ void mergeTab(TYPE tab[], const size_t left, const size_t middle, const size_t r
 			++tabRight;
 		}
 	}
+	free(tmp);
 }
 
 /**
@@ -39,18 +40,18 @@ void mergeTab(TYPE tab[], const size_t left, const size_t middle, const size_t r
  * @param end The ending index.
  * @author Thomas MEDARD
  */
-void mergesort(TYPE tab[], size_t begin, size_t end) {        
+void mergesort(TYPE tab[], size_t begin, size_t end) {
     if(begin < end) {
 		// Middle
-        size_t mid = (begin + end) / 2;		 
-		
+        size_t mid = (begin + end) / 2;
+
 		// Left recursion
-        mergesort(tab, begin, mid);  
-		// Right recursion        
-        mergesort(tab, mid + 1 , end);       
-		
+        mergesort(tab, begin, mid);
+		// Right recursion
+        mergesort(tab, mid + 1 , end);
+
 		// Merging of two sorted tables
-        mergeTab(tab, begin , mid, end); 
+        mergeTab(tab, begin , mid, end);
     }
 }
 
@@ -61,6 +62,6 @@ void mergesort(TYPE tab[], size_t begin, size_t end) {
  * @author Thomas MEDARD
  */
 void merge (TYPE tab[], size_t tabSize) {
-	
+
 	mergesort(tab, 0, tabSize - 1);
 }

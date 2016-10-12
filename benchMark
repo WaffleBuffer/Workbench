@@ -29,7 +29,7 @@ bin/Workbench QuickSort
 echo
 
 echo "Tri avec arbre AVL :"
-bin/Workbench FindTrees
+bin/Workbench BinaryTree
 echo
 
 echo "Tri par tas :"

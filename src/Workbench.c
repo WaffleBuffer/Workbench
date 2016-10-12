@@ -214,7 +214,7 @@ void alarmHandler(int sig) {
 	// Suppress compiler warning about unused argument
 	(void)sig;
 
-	printf("Test too long on size %zu\n", sizesTab[currentSize]);
+	printf("Test too long on size %zu, current average : %lf ms\n", sizesTab[currentSize], results[currentSize]);
 
 	creatReport();
 
