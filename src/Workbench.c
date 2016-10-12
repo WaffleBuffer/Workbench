@@ -22,7 +22,7 @@
 #include <signal.h> //SA_RESTART
 
 // Table sizes to test
-#define SIZE1  10
+#define SIZE1  100
 #define SIZE2  500
 #define SIZE3  5000
 #define SIZE4  10000
@@ -53,10 +53,10 @@
 #define NB_TEST_PER_SIZE 20
 
 // Number of test to do
-#define NB_SIZE_TO_TEST 1
+#define NB_SIZE_TO_TEST 15
 
 // Maximum time allowed for a size test (5 minutes)
-#define TIME_BEFORE_STOP 10
+#define TIME_BEFORE_STOP 300
 
 // Maximum value for a random element
 #define MAX_RAND_VALUE 100
@@ -276,10 +276,10 @@ void launchTest(const size_t sizeToTest) {
 		// Generating  its values
 		initTabRand(tab, sizeToTest);
 		
-		for (size_t i = 0; i < sizeToTest; ++i) {
+		/*for (size_t i = 0; i < sizeToTest; ++i) {
 			printf("%d ", tab[i]);
 		}
-		printf("\n");
+		printf("\n");*/
 		
 		// Begin time mesure
 		clock_t begin = clock();
@@ -290,10 +290,10 @@ void launchTest(const size_t sizeToTest) {
 		// End time mesure
 		clock_t end = clock();
 		
-		for (size_t i = 0; i < sizeToTest; ++i) {
+		/*for (size_t i = 0; i < sizeToTest; ++i) {
 			printf("%d ", tab[i]);
 		}
-		printf("\n\n");
+		printf("\n\n");*/
 
 		// Calculating passed time
 		resultsSum += ((double)end - (double)begin) / CLOCKS_PER_SEC * 1000.0;
