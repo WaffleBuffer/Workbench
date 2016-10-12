@@ -177,7 +177,7 @@ void writeLineCsv(const char* fileName, const double tab[], const size_t tableSi
 		exit(1);
 	}
 
-	for (size_t i = 0; i < tableSize; ++i) {
+	for (size_t i = 0; i <= tableSize; ++i) {
 		fprintf(file, "%lf%c", tab[i], CSV_SEPARATOR);
 	}
 
@@ -213,7 +213,7 @@ void creatReport(void) {
 void alarmHandler(int sig) {
 	// Suppress compiler warning about unused argument
 	(void)sig;
-	
+
 	printf("Test too long on size %zu\n", sizesTab[currentSize]);
 
 	creatReport();
@@ -269,18 +269,19 @@ void launchTest(const size_t sizeToTest) {
 
 			// Calculating passed time
 			resultsSum += ((double)end - (double)begin) / CLOCKS_PER_SEC * 1000.0;
+			results[currentSize] = resultsSum / (double) i+1;
 
 			continue;
 		} // End chained list test
 
 		// Generating  its values
 		initTabRand(tab, sizeToTest);
-		
+
 		/*for (size_t i = 0; i < sizeToTest; ++i) {
 			printf("%d ", tab[i]);
 		}
 		printf("\n");*/
-		
+
 		// Begin time mesure
 		clock_t begin = clock();
 
@@ -289,7 +290,7 @@ void launchTest(const size_t sizeToTest) {
 
 		// End time mesure
 		clock_t end = clock();
-		
+
 		/*for (size_t i = 0; i < sizeToTest; ++i) {
 			printf("%d ", tab[i]);
 		}
@@ -297,6 +298,7 @@ void launchTest(const size_t sizeToTest) {
 
 		// Calculating passed time
 		resultsSum += ((double)end - (double)begin) / CLOCKS_PER_SEC * 1000.0;
+		results[currentSize] = resultsSum / (double) i+1;
 	}
 
 	const double finalRes = resultsSum / (double) NB_TEST_PER_SIZE;
