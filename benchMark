@@ -2,27 +2,36 @@
 
 echo "Tri a bulle :"
 bin/Workbench Bubbles
+echo
 
 echo "Tri par insertion sequentielle :"
 bin/Workbench SequentialInsertion
+echo
 
 echo "Tri par insertion sequentielle (liste chainee) :"
 bin/Workbench SequentInsChained
+echo
 
 echo "Tri par insertion dichotomique :"
 bin/Workbench DichotomousInsertion
+echo
 
 echo "Tri par selection/permutation :"
 bin/Workbench SelectionPermutation
+echo
 
 echo "Tri par fusion :"
 bin/Workbench Merge
+echo
 
 echo "Tri rapide :"
 bin/Workbench QuickSort
+echo
 
 #echo "Tri avec arbre AVL :"
 #bin/Workbench FindTrees
+#echo
 
-#echo "Tri par tas :"
-#bin/Workbench Stack
+echo "Tri par tas :"
+bin/Workbench HeapSort
+echo
