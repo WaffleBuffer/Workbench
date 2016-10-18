@@ -8,7 +8,7 @@
  * @author Thomas MEDARD, Remi SEGRETAIN
  */
 struct BTreeNode {
-	
+
     struct BTreeNode *left;
     TYPE data ;
     struct BTreeNode *right;
@@ -39,6 +39,7 @@ void insert (struct BTreeNode **node, TYPE value) {
         else
             insert (&((*node)->right), value) ;
     }
+	free(*node);
 }
 
 /**
@@ -48,9 +49,9 @@ void insert (struct BTreeNode **node, TYPE value) {
  * @author Thomas MEDARD, Remi SEGRETAIN
  */
 void inorder (const struct BTreeNode *node, TYPE tab[]){
-	
+
     if (node != NULL){
-		
+
         inorder(node->left, tab);
         tab[btIndex] = node->data;
         ++btIndex;
@@ -65,7 +66,7 @@ void inorder (const struct BTreeNode *node, TYPE tab[]){
  * @author Thomas MEDARD, Remi SEGRETAIN
  */
 void bTreeSort(TYPE tab[], const size_t tabSize) {
-	
+
 	struct BTreeNode *bTree = NULL;
 
 	for (size_t i = 0; i < tabSize; ++i) {
