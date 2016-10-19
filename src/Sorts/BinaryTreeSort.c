@@ -1,11 +1,17 @@
+/**
+ * \file BinaryTreeSort.c
+ * \brief Sort algorithim using binary sort tree.
+ * \author Thomas MEDARD, Remi SEGRETAIN
+ */
+
 #include "../Utils.c"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 /**
- * A binary search tree node
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \struct BTreeNode BinaryTreeSort.c
+ * \brief A binary search tree node
  */
 struct BTreeNode {
 
@@ -15,15 +21,15 @@ struct BTreeNode {
 };
 
 /**
- * The current index of the table to reinsert.
+ * \brief The current index of the table to reinsert.
  */
 size_t btIndex;
 
 /**
- * Insert a value inside a bTreeNode.
- * @param BTreeNode the node to insert the value after. Must be initialized.
- * @param value The value to insert. Must be initialized.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void insert (struct BTreeNode **node, TYPE value)
+ * \brief Insert a value inside a bTreeNode.
+ * \param[in, out] BTreeNode the node to insert the value after. Must be initialized.
+ * \param[in] value The value to insert. Must be initialized.
  */
 void insert (struct BTreeNode **node, TYPE value) {
     if (*node == NULL) {
@@ -42,10 +48,10 @@ void insert (struct BTreeNode **node, TYPE value) {
 }
 
 /**
- * Insert all the value of a BTreeNode inside an array.
- * @param node The BTreeNode to get the values from.
- * @param tab The array to put the values into. It's size must be equal to the number of values in node.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn inorder (const struct BTreeNode *node, TYPE tab[])
+ * \brief Insert all the value of a BTreeNode inside an array.
+ * \param[in] node The BTreeNode to get the values from.
+ * \param[in, out] tab The array to put the values into. It's size must be equal to the number of values in node.
  */
 void inorder (const struct BTreeNode *node, TYPE tab[]){
 
@@ -58,6 +64,11 @@ void inorder (const struct BTreeNode *node, TYPE tab[]){
     }
 }
 
+/**
+ * \fn freeTree (struct BTreeNode *node)
+ * \brief free all nodes linked to node recursievely.
+ * \param[in, out] node The BTreeNode to free.
+ */
 void freeTree (struct BTreeNode *node) {
     if (node == NULL) return;
     freeTree(node->left);
@@ -66,10 +77,10 @@ void freeTree (struct BTreeNode *node) {
 }
 
 /**
- * Sort an array with a binary search tree.
- * @param tab The array to sort. Must be initialized.
- * @param tabSize The size of the array. Must be valid.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn bTreeSort(TYPE tab[], const size_t tabSize)
+ * \brief Sort an array with a binary search tree.
+ * \param[in, out] tab The array of TYPE to sort. All tabSize values must be initialized.
+ * \param[in] tabSize The size of the array. Must be valid.
  */
 void bTreeSort(TYPE tab[], const size_t tabSize) {
 

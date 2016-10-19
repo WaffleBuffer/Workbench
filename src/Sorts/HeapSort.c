@@ -1,17 +1,26 @@
+/**
+ * \file HeapSort.c
+ * \brief Sort algorithim using Heap.
+ * \author Thomas MEDARD, Remi SEGRETAIN
+ */
+
 #include "../Utils.c"
 
 #include <stdlib.h>
 
-// When we use Heap, we know we use a Heap like array
+/** 
+ * \def Heap 
+ * \briefWhen we use Heap, we know we use a Heap like array 
+ */
 typedef TYPE Heap[];
 
 
 /**
- * Add a value to a Heap.
- * @param heap the Heap to add he value into.
- * @param index The last index of heap. When called, index should be equal to the size of heap - 1.
- * @param value The value to insert.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void addHeap(Heap heap, const size_t index, const TYPE value)
+ * \brief Add a value to a Heap.
+ * \param[in, out] heap the Heap to add he value into.
+ * \param[in] index The last index of heap. When called outside recursivity, index should be equal to the size of heap - 1.
+ * \param[in] value The value to insert.
  */
 void addHeap(Heap heap, const size_t index, const TYPE value) {
 	const size_t parent = (index - 1) / 2;
@@ -24,10 +33,10 @@ void addHeap(Heap heap, const size_t index, const TYPE value) {
 }
 
 /**
- * Convert an array into a Heap like array.
- * @param tab The array to convert.
- * @param tabSize The size of tab.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void createHeap(TYPE tab[], const size_t tabSize)
+ * \brief Convert an array into a Heap like array.
+ * \param[in, out] tab The array to convert.
+ * \param[in] tabSize The size of tab.
  */
 void createHeap(TYPE tab[], const size_t tabSize) {
 	for (size_t i = 0; i < tabSize; ++i) {
@@ -36,10 +45,10 @@ void createHeap(TYPE tab[], const size_t tabSize) {
 }
 
 /**
- * Delete tha max value from a Heap and keep the Heap format.
- * @param heap The Heap to delete the max value from.
- * @param heapSize a pointer to the size of heap.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void deleteMaxHeapValue(Heap heap, size_t *heapSize)
+ * \brief Delete tha max value from a Heap and keep the Heap format.
+ * \param[in, out] heap The Heap to delete the max value from.
+ * \param[in] heapSize a pointer to the size of heap.
  */
 void deleteMaxHeapValue(Heap heap, size_t *heapSize) {
 	size_t i, left, right, max;
@@ -79,10 +88,10 @@ void deleteMaxHeapValue(Heap heap, size_t *heapSize) {
 }
 
 /**
- * Sort an array using Heap format.
- * @param tab The array to sort.
- * @param tabSize The size of tab.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void heapSort(TYPE tab[], const size_t tabSize)
+ * \brief Sort an array using Heap format.
+ * \param[in, out] tab The array of TYPE to sort. All tabSize values must be initialized.
+ * \param[in] tabSize The size of tab.
  */
 void heapSort(TYPE tab[], const size_t tabSize) {
 	

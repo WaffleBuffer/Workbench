@@ -1,12 +1,19 @@
+/**
+ * \file SelecPerm.c
+ * \brief Sort algorithim using selection/permutation.
+ * \author Thomas MEDARD, Remi SEGRETAIN
+ */
+
 #include "../Utils.c"
 
 #include <stdlib.h>
-/*
-* Sort an int tab with selection/permutation algorithim.
-* @param tab The table of int to sort.
-* @param tabSize the size of tab.
-* @author Thomas MEDARD
-*/
+
+/**
+ * \fn void selecPerm (TYPE tab[], const size_t tabSize)
+ * \brief Sort an array of TYPE with selection/permutation algorithim.
+ * \param[in, out] tab The array of TYPE to sort. All tabSize values must be initialized.
+ * \param[in] tabSize the size of tab.
+ */
 void selecPerm (TYPE tab[], const size_t tabSize) {
 	size_t i, j, min;
     TYPE save;

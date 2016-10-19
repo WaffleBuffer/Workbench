@@ -1,12 +1,19 @@
+/**
+ * \file DichoInser.c
+ * \brief Sort algorithim using dichotomous/insertion.
+ * \author Thomas MEDARD, Remi SEGRETAIN
+ */
+
 #include "../Utils.c"
 
 #include <stdlib.h>
-/*
-* Sort an int tab with dichotomous/insertion algorithim.
-* @param tab The table of int to sort.
-* @param tabSize the size of tab.
-* @author Thomas MEDARD
-*/
+
+/**
+ * \fn void dichoInser (TYPE tab[], const size_t tabSize)
+ * \brief Sort an int tab with dichotomous/insertion algorithim.
+ * \param[in, out] tab The array of TYPE to sort. All tabSize values must be initialized.
+ * \param[in] tabSize the size of tab.
+ */
 void dichoInser (TYPE tab[], const size_t tabSize) {
 	size_t i, j, left, right, middle;
 	TYPE save;

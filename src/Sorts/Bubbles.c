@@ -1,13 +1,19 @@
+/**
+ * \file Bubbles.c
+ * \brief Sort algorithim using bubbles.
+ * \author Thomas MEDARD, Remi SEGRETAIN
+ */
+
 #include "../Utils.c"
 
 #include <stdlib.h>
 
-/*
-* Sort an int tab with bubbles algorithim.
-* @param tab The table of int to sort.
-* @param tabSize the size of tab.
-* @author Thomas MEDARD
-*/
+/**
+ * \fn void bubblesSort (TYPE tab[], const size_t tabSize)
+ * \brief Sort an int tab with bubbles algorithim.
+ * \param[in, out] tab The table of TYPE to sort. All tabSize values must be initialized.
+ * \param[in] tabSize The size of tab.
+ */
 void bubblesSort (TYPE tab[], const size_t tabSize) {
 
     int sorted = 0;

@@ -1,12 +1,18 @@
+/**
+ * \file Merge.c
+ * \brief Sort algorithim using merge.
+ * \author Thomas MEDARD, Remi SEGRETAIN
+ */
+
 #include "../Utils.c"
 
 /**
- * Merge two sorted tables (which are in fact inside tab).
- * @param tab The table containing all values.
- * @param beginTab1 The begginnin index of first tab.
- * @param endTab1 The ending index of the first tab.
- * @param endTab2 The ending index of the second tab.
- * @author Thomas MEDARD
+ * \fn void mergeTab(TYPE tab[], const size_t left, const size_t middle, const size_t right)
+ * \brief Merge two sorted arrays (which are in fact inside tab).
+ * \param[in, out] tab The array containing all values. All values must be initialized.
+ * \param[in] beginTab1 The beginning index of first tab. Must be valid.
+ * \param[in] endTab1 The ending index of the first tab. Must be valid.
+ * \param[in] endTab2 The ending index of the second tab. Must be valid.
  */
 void mergeTab(TYPE tab[], const size_t left, const size_t middle, const size_t right) {
 	TYPE* tmp = (TYPE*) malloc((right - left + 1)*sizeof(TYPE));
@@ -35,12 +41,13 @@ void mergeTab(TYPE tab[], const size_t left, const size_t middle, const size_t r
 }
 
 /**
- * Main recursion : cut tab in half (with indexes) and then try to merge them when the are sorted.
- * @param begin The begginning index.
- * @param end The ending index.
- * @author Thomas MEDARD
+ * \fn void mergesort(TYPE tab[], size_t begin, size_t end)
+ * \brief Main recursion : cut tab in half (with indexes) and then try to merge them when they are sorted.
+ * \param[in, out] tab The array of Type to sort. All values from begin to end must be initialized.
+ * \param[in] begin The begginning index of tab. Must be valid.
+ * \param[in] end The ending index of tab. Must be valid.
  */
-void mergesort(TYPE tab[], size_t begin, size_t end) {
+void mergesort(TYPE tab[], const size_t begin, const size_t end) {
     if(begin < end) {
 		// Middle
         size_t mid = (begin + end) / 2;
@@ -56,12 +63,12 @@ void mergesort(TYPE tab[], size_t begin, size_t end) {
 }
 
 /**
- * Sort an int table with merge algorithim.
- * @param tab The table of int to sort.
- * @param tabSize the size of tab.
- * @author Thomas MEDARD
+ * \fn void merge (TYPE tab[], size_t tabSize)
+ * \brief Sort an array of TYPE with merge algorithim.
+ * \param[in, out] tab The array of TYPE to sort. All tabSize values must be initialized.
+ * \param[in] tabSize the size of tab.
  */
-void merge (TYPE tab[], size_t tabSize) {
+void merge (TYPE tab[], const size_t tabSize) {
 
 	mergesort(tab, 0, tabSize - 1);
 }
