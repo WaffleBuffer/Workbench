@@ -39,7 +39,6 @@ void insert (struct BTreeNode **node, TYPE value) {
         else
             insert (&((*node)->right), value) ;
     }
-	free(*node);
 }
 
 /**
@@ -59,6 +58,13 @@ void inorder (const struct BTreeNode *node, TYPE tab[]){
     }
 }
 
+void freeTree (struct BTreeNode *node) {
+    if (node == NULL) return;
+    freeTree(node->left);
+    freeTree(node->right);
+    free(node);
+}
+
 /**
  * Sort an array with a binary search tree.
  * @param tab The array to sort. Must be initialized.
@@ -75,4 +81,5 @@ void bTreeSort(TYPE tab[], const size_t tabSize) {
 
 	btIndex = 0;
 	inorder(bTree, tab);
+    freeTree(bTree);
 }

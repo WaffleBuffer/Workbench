@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 
+/*
+Il faut que la liste contienne au mojns deux éléments.
+*/
 void ins_seqChained (List *list) {
 
 	Node *currentNode = list->top->next;

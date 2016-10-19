@@ -22,21 +22,21 @@
 #include <signal.h> //SA_RESTART
 
 // Table sizes to test
-#define SIZE1  100
-#define SIZE2  500
-#define SIZE3  5000
-#define SIZE4  10000
-#define SIZE5  50000
-#define SIZE6  100000
-#define SIZE7  200000
-#define SIZE8  300000
-#define SIZE9  400000
-#define SIZE10 500000
-#define SIZE11 600000
-#define SIZE12 700000
-#define SIZE13 800000
-#define SIZE14 900000
-#define MAX    1000000
+#define SIZE1  2
+#define SIZE2  2
+#define SIZE3  5
+#define SIZE4  10
+#define SIZE5  15
+#define SIZE6  20
+#define SIZE7  25
+#define SIZE8  30
+#define SIZE9  35
+#define SIZE10 40
+#define SIZE11 45
+#define SIZE12 50
+#define SIZE13 55
+#define SIZE14 60
+#define MAX    65
 
 // List of all available alorithims
 #define BUBBLES        "Bubbles"
