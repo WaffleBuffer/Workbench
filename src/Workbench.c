@@ -1,3 +1,9 @@
+/**
+ * \file Workbench.c
+ * \brief Run benchmark tests for sorting algorithim.
+ * \author Thomas MEDARD, Remi SEGRETAIN
+ */
+
 #include "bor-util.h" // SIGALRM
 #include "list.h" // List
 #include "Utils.c" //TYPE
@@ -21,50 +27,157 @@
 #include <string.h> // strcpy_s
 #include <signal.h> //SA_RESTART
 
-// Table sizes to test
-#define SIZE1  2
-#define SIZE2  2
-#define SIZE3  5
-#define SIZE4  10
-#define SIZE5  15
-#define SIZE6  20
-#define SIZE7  25
-#define SIZE8  30
-#define SIZE9  35
-#define SIZE10 40
-#define SIZE11 45
-#define SIZE12 50
-#define SIZE13 55
-#define SIZE14 60
-#define MAX    65
+/**
+ * \def SIZE1
+ * \brief Size 1.
+ */
+#define SIZE1 100
+/**
+ * \def SIZE2
+ * \brief Size 2.
+ */
+#define SIZE2 500
+/**
+ * \def SIZE3
+ * \brief Size 3.
+ */
+#define SIZE3 5000
+/**
+ * \def SIZE4
+ * \brief Size 4.
+ */
+#define SIZE4 10000
+/**
+ * \def SIZE5
+ * \brief Size 5.
+ */
+#define SIZE5 50000
+/**
+ * \def SIZE6
+ * \brief Size 6.
+ */
+#define SIZE6 100000
+/**
+ * \def SIZE7
+ * \brief Size 7.
+ */
+#define SIZE7 200000
+/**
+ * \def SIZE8
+ * \brief Size 8.
+ */
+#define SIZE8 300000
+/**
+ * \def SIZE9
+ * \brief Size 9.
+ */
+#define SIZE9 400000
+/**
+ * \def SIZE10
+ * \brief Size 10.
+ */
+#define SIZE10 500000
+/**
+ * \def SIZE11
+ * \brief Size 11.
+ */
+#define SIZE11 600000
+/**
+ * \def SIZE12
+ * \brief Size 12.
+ */
+#define SIZE12 700000
+/**
+ * \def SIZE13
+ * \brief Size 13.
+ */
+#define SIZE13 800000
+/**
+ * \def SIZE14
+ * \brief Size 14.
+ */
+#define SIZE14 900000
+/**
+ * \def MAX
+ * \brief Size 15 and also max size.
+ */
+#define MAX    1000000
 
-// List of all available alorithims
-#define BUBBLES        "Bubbles"
+/**
+ * \def BUBBLES
+ * \brief argument waited for bubble sorting algorithim.
+ */
+#define BUBBLES "Bubbles"
+/**
+ * \def SEQUENTIAL_INS
+ * \brief argument waited sequential insertion sorting algorithim.
+ */
 #define SEQUENTIAL_INS "SequentialInsertion"
+/**
+ * \def SEQUENTIAL_INS_CHAINED
+ * \brief argument waited for chained list sequential insertion sorting algorithim.
+ */
 #define SEQUENTIAL_INS_CHAINED "SequentInsChained"
-#define DICHO_INS 	   "DichotomousInsertion"
-#define SELEC_PERM     "SelectionPermutation"
-#define MERGE 		   "Merge"
-#define QUICKSORT	   "QuickSort"
-#define B_TREE         "BinaryTree"
-#define HEAP 		   "HeapSort"
+/**
+ * \def DICHO_INS
+ * \brief argument waited for dichotomous insertion sorting algorithim.
+ */
+#define DICHO_INS "DichotomousInsertion"
+/**
+ * \def SELEC_PERM
+ * \brief argument waited for selection/permutation sorting algorithim.
+ */
+#define SELEC_PERM "SelectionPermutation"
+/**
+ * \def MERGE
+ * \brief argument waited for merge sorting algorithim.
+ */
+#define MERGE "Merge"
+/**
+ * \def QUICKSORT
+ * \brief argument waited for quicksort sorting algorithim.
+ */
+#define QUICKSORT "QuickSort"
+/**
+ * \def B_TREE
+ * \brief argument waited for binary tree sorting algorithim.
+ */
+#define B_TREE "BinaryTree"
+/**
+ * \def HEAP
+ * \brief argument waited for heap sorting algorithim.
+ */
+#define HEAP "HeapSort"
 
-// Number of test per size
+/**
+ * \def NB_TEST_PER_SIZE
+ * \brief Number of test to run for each size.
+ */
 #define NB_TEST_PER_SIZE 20
 
-// Number of test to do
+/**
+ * \def NB_SIZE_TO_TEST
+ * \brief Number of size to test.
+ */
 #define NB_SIZE_TO_TEST 15
 
-// Maximum time allowed for a size test (5 minutes)
+/**
+ * \def TIME_BEFORE_STOP
+ * \brief The time left for each test sequences (All tests on a size) befor we stop it.
+ */
 #define TIME_BEFORE_STOP 300
 
-// Maximum value for a random element
+/**
+ * \def MAX_RAND_VALUE
+ * \brief The maximum value for random generated values inside arrays to sort.
+ */
 #define MAX_RAND_VALUE 100
 
-// The csv separator used
+/**
+ * \def CSV_SEPARATOR
+ * \brief The character used to separate values in CSV generated files. 
+ */
 #define CSV_SEPARATOR ';'
-
-// The tested type. Declared in list.h
 
 // All the sizes to test
 const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZE6,
@@ -86,10 +199,10 @@ double results[15];
 size_t currentSize;
 
 /**
- * Initialize all values in tab of size size to a random number. tab must have been set to size size.
- * @param tab The table to generate values into. Must have been set to size size.
- * @param size the size of tab. Must be > 0.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void initTabRand (TYPE tab[], const size_t size)
+ * \brief Initialize all values in tab of size size to a random number. tab must have been set to size size.
+ * \param[in, out] tab The table to generate values into. Must have been set to size size.
+ * \param[in] size The size of tab. Must be valid.
  */
 void initTabRand (TYPE tab[], const size_t size) {
 	for (size_t i = 0; i < size; ++i) {
@@ -98,10 +211,10 @@ void initTabRand (TYPE tab[], const size_t size) {
 }// initTabRand
 
 /**
- * Add list with size random number. list must have been initialized
- * @param tab The table to generate values into. Must have been initialized
- * @param size the number of value to add to list. Must be > 0.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void initListRand(List *list, const size_t size)
+ * \brief Add values to list with size random number. list must have been initialized
+ * \param[in, out] list The List to generate values into. Must have been initialized
+ * \param[in] size the number of value to add to list. Must be valid.
  */
 void initListRand(List *list, const size_t size) {
 
@@ -111,8 +224,8 @@ void initListRand(List *list, const size_t size) {
 }
 
 /**
- * Displays an error message about needed arguments
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void displayArgsErr(void)
+ * \brief Displays an error message about needed arguments
  */
 void displayArgsErr(void) {
 	fprintf(stderr, "Need to precise a valid algorithim.\nValids algorithims are :\n");
@@ -124,10 +237,10 @@ void displayArgsErr(void) {
 }
 
 /**
- * Placeholder function to replace unfinished sorting algorithim.
- * @param tab the table to test
- * @param tabSize the size of tab
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void testTime(TYPE tab[], const size_t tabSize)
+ * \brief Placeholder function to replace unfinished sorting algorithim.
+ * \param[in, out] tab the table to test.
+ * \param[in] tabSize the size of tab.
  */
 void testTime(TYPE tab[], const size_t tabSize) {
 	(void) tab;
@@ -136,14 +249,14 @@ void testTime(TYPE tab[], const size_t tabSize) {
 }
 
 /**
- * Create (or replace) a csv file named fileName and write all elements of titleTab inside.
- * @param fileName The name of the file that should be created or replaced.
- * @param titleTab Elements writen in a line. Correspond to a line of titles. Must be initialized.
- * @param tableSize The size of titleTab. Must be > 0.
- * @return The file descriptor (of second level) of the csv file.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize)
+ * \brief Create (or replace) a csv file named fileName and write all elements of titleTab inside.
+ * \param[in] fileName The name of the file that should be created or replaced. Must be initialized.
+ * \param[in] titleTab Elements writen in a line. Correspond to a line of titles. Must be initialized.
+ * \param[in] tableSize The size of titleTab. Must be valid.
+ * \return The file descriptor (of second level) of the csv file.
  */
-FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize) {
+FILE* createCSV(const char* fileName, const size_t titlesTab[], size_t tableSize) {
 
 	FILE* file = fopen(fileName, "w");
 
@@ -163,11 +276,11 @@ FILE* createCSV(char* fileName, const size_t titlesTab[], size_t tableSize) {
 }
 
 /**
- * Write a line of element in a csv file (that must exists).
- * @param fileName the name of the file to write into. This file must exists.
- * @param tab The elements to write. Must be initilized.
- * @param tableSize the size of tab. Must be > 0.
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void writeLineCsv(const char* fileName, const double tab[], const size_t tableSize)
+ * \brief Write a line of element in a csv file (that must exists).
+ * \param[in] fileName the name of the file to write into. This file must exists.
+ * \param[in] tab The elements to write. Must be initilized.
+ * \param[in] tableSize the size of tab. Must be valid.
  */
 void writeLineCsv(const char* fileName, const double tab[], const size_t tableSize) {
 	FILE* file = fopen(fileName, "a");
@@ -186,8 +299,8 @@ void writeLineCsv(const char* fileName, const double tab[], const size_t tableSi
 }
 
 /**
- * Create the csv report for the current tested test. The test must be over.
- * @author Thomas MEDARD, Remi SEGETAIN
+ * \fn void creatReport(void)
+ * \brief Create the csv report for the current tested test. The test must be over.
  */
 void creatReport(void) {
 
@@ -206,9 +319,9 @@ void creatReport(void) {
 }
 
 /**
- * Function called on SIGALRM (when a test is too long).
- * @param sig the code of the signal (unused).
- * @author Thomas MEDARD, Remi SEGRETAIN
+ * \fn void alarmHandler(int sig)
+ * \brief Function called on SIGALRM (when a test is too long).
+ * \param[in] sig the code of the signal (unused).
  */
 void alarmHandler(int sig) {
 	// Suppress compiler warning about unused argument
@@ -222,10 +335,10 @@ void alarmHandler(int sig) {
 }
 
 /**
-* Function to lauch a test of sizeToTest size.
-* @param sizeToTest The size of the table to test.
-* @author Thomas MEDARD, Remi SEGRETAIN
-*/
+ * \fn void launchTest(const size_t sizeToTest)
+ * \brief Function to lauch a test of sizeToTest size.
+ * \param[in] sizeToTest The size of the table to test.
+ */
 void launchTest(const size_t sizeToTest) {
 	srand(time(0));
 	// Creating the table
@@ -309,11 +422,11 @@ void launchTest(const size_t sizeToTest) {
 }
 
 /**
-* Affect chooseAlgo and algo corresponding to the argument.
-* @param arg The chosen algo. If it's invalid, will exit with error message.
-* @author Thomas MEDARD, Remi SEGRETAIN
-*/
-void chooseAlgo(char* arg) {
+ * \fn void chooseAlgo(char* arg)
+ * \bref Affect chooseAlgo and algo corresponding to the argument.
+ * \param[in] arg The chosen algo. If it's invalid, will exit with error message.
+ */
+void chooseAlgo(const char* arg) {
 	if (strcmp(arg, BUBBLES) == 0) {
 		chosenAlgo = BUBBLES;
 		algo = bubblesSort;
@@ -357,11 +470,11 @@ void chooseAlgo(char* arg) {
 }
 
 /**
-* The main : make all tests for one sorting algorithim
-* @param argc The number of arguments. Must be > 1.
-* @param argv The arguments. argv[1] must be initialized and a size_t (under string format).
-* @author Thomas MEDARD, Rémi SEGRETAIN
-*/
+ * \fn int main(int argc, char* argv[])
+ * \brief The main : make all tests for one sorting algorithim
+ * \param[in] argc The number of arguments. Must be > 1.
+ * \param[in] argv The arguments. argv[1] must be initialized and a size_t (under string format).
+ */
 int main(int argc, char* argv[]) {
 
 	// Checking arguments
