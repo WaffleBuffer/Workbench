@@ -1,0 +1,43 @@
+void ins_seqChained (List *list) {
+
+	// Make sure that we can sort it
+	if (list->top == NULL || list->top->next == NULL) {
+		return;
+	} 
+
+	Node *currentNode = list->top->next;
+	Node *currentSortedNode = list->top;
+	Node *kNode;
+
+	TYPE tmp;
+
+	while (currentNode->next != NULL) {
+
+		while (currentNode->value > currentSortedNode->value) {
+			currentSortedNode = currentSortedNode->next;
+		}
+
+		tmp = currentNode->value;
+
+		for (kNode = currentSortedNode; kNode != currentNode; kNode = kNode->next) {
+			kNode->next->value = kNode->value;
+		}
+
+		currentSortedNode->value = tmp;
+
+		currentNode = currentNode->next;
+		currentSortedNode = list->top;
+	}
+}
+
+On ne considère que les opérations sur ->value.
+Prenons i l'index de currentNode dans la List. Somme[i = 1, n - 1](i) = somme des i allant de 1 à n - 1. € = appartient. -O = Théta
+On a donc pour les comparaisons : 
+Pour un i donné on a (i + 1) tests (2e while).
+=> Somme[i = 1, n - 1](i + 1) <=> Somme[i = 2, n - 1](i) <=> Somme[i = 1, n](i - 1) = (n(n + 1)) / (2) - 1 € -O(n²) car on parcour tous sans sortie préalable.
+
+Pour les transfères :
+Pour un i donné on (2 + i) transfères (tmp + for + currentSortedNode).
+=> Somme[i = 1, n - 1](2 + i) = Somme[i = 2, n - 1](i) = Somme[i = 2, n](i - 1) = (n(n + 1)) / (2) - 2 - 1 + (n + 1) € -O(n²)
+
+Donc en théorie, cet algorithme € -O(n²). En pratique, il est tout de même plus lent que l'insertion séquentielle normale car l'accès en RAM de la List est plus coûteuse.
