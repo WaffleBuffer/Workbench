@@ -1,0 +1,74 @@
+void insert (struct BTreeNode **node, TYPE value) {
+    if (*node == NULL) {
+        *node = malloc(sizeof(struct BTreeNode));
+
+        (*node)->left = NULL ;
+        (*node)->data = value ;
+        (*node)->right = NULL ;
+    }
+    else {
+        if(value < (*node)->data)
+            insert(&((*node)->left), value) ;
+        else
+            insert (&((*node)->right), value) ;
+    }
+}
+
+void inorder (const struct BTreeNode *node, TYPE tab[]){
+
+    if (node != NULL){
+
+        inorder(node->left, tab);
+        tab[btIndex] = node->data;
+        ++btIndex;
+        inorder(node->right, tab);
+    }
+}
+
+void bTreeSort(TYPE tab[], const size_t tabSize) {
+
+	struct BTreeNode *bTree = NULL;
+
+	for (size_t i = 0; i < tabSize; ++i) {
+		insert(&bTree, tab[i]);
+	}
+
+	btIndex = 0;
+	inorder(bTree, tab);
+    freeTree(bTree);
+}
+
+On ne considère que les opérations sur ->data
+Somme[i = 1, n - 1](i) = somme des i allant de 1 à n - 1. € = appartient. O = grand o. N = les entiers.
+
+-C(bTreeSort) = n * C(insert) + C(inorder)
+
+-C(inorder) : 
+Prenons i = niveau dans l'arbre binaire.
+
+C(inorder(i)) = 1 + 2 * C(inorder(i - 1))
+Prenons l'hypothèse H : C(inorder(i)) = à complété <------------------
+
+Initialisation : 
+Pour i = 1 : C(inorder(1)) = 1 + 2 * 0 = 1 Donc H est vrai au rang i = 1.
+
+Induction : Prenons n' € N tel que n' > n >= 1.
+Par définition : C(inorder(n')) = 1 + 2 * C(inorder(n' - 1))
+Par hypothèse : C(inorder(n')) = 1 + 2 * H <------------------
+			      = 
+Donc La complexité de inorder € O().
+
+-C(insert) :
+	Dans un premier cas 1.
+	Dans l'autre cas :
+C(insert(i)) = 1 + C(insert(i - 1)).
+Prenons l'hypothèse H2 : C(insert(i)) = à complété <------------------
+initialisation ;
+Pour i = 0 : C(insert(i)) = 1, donc H2 vrai au rang 0.
+Induction : Prenons n' € N tel que n' > n >= 0.
+Par définition : C(insert(n')) = 1 + C(insert(n' - 1))
+Par hypothèse : C(insert(n')) = 1 + H2 <------------------
+Donc la complexité de insert € O().
+
+-Conclusion : 
+C(bTreeSort) = n * H + H2 € O()
