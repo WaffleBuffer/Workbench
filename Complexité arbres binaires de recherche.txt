@@ -43,26 +43,26 @@ Somme[i = 1, n - 1](i) = somme des i allant de 1 à n - 1. € = appartient. O = gr
 
 -C(bTreeSort) = n * C(insert) + C(inorder)
 
--C(inorder) : 
+-C(inorder) :
 Prenons i = niveau dans l'arbre binaire.
 
 C(inorder(i)) = 1 + 2 * C(inorder(i - 1))
-Prenons l'hypothèse H : C(inorder(i)) = à complété <------------------
+Prenons l'hypothèse H : C(inorder(i)) = à compléter <------------------
 
-Initialisation : 
+Initialisation :
 Pour i = 1 : C(inorder(1)) = 1 + 2 * 0 = 1 Donc H est vrai au rang i = 1.
 
 Induction : Prenons n' € N tel que n' > n >= 1.
 Par définition : C(inorder(n')) = 1 + 2 * C(inorder(n' - 1))
 Par hypothèse : C(inorder(n')) = 1 + 2 * H <------------------
-			      = 
+			      =
 Donc La complexité de inorder € O(). <----------------
 
 -C(insert) :
 	Dans un premier cas 1.
 	Dans l'autre cas :
 C(insert(i)) = 1 + C(insert(i - 1)).
-Prenons l'hypothèse H2 : C(insert(i)) = à complété <------------------
+Prenons l'hypothèse H2 : C(insert(i)) = à compléter <------------------
 initialisation ;
 Pour i = 0 : C(insert(i)) = 1, donc H2 vrai au rang 0.
 Induction : Prenons n' € N tel que n' > n >= 0.
@@ -70,5 +70,5 @@ Par définition : C(insert(n')) = 1 + C(insert(n' - 1))
 Par hypothèse : C(insert(n')) = 1 + H2 <------------------
 Donc la complexité de insert € O(). <----------------
 
--Conclusion : 
+-Conclusion :
 C(bTreeSort) = n * H + H2 € O() <----------------
