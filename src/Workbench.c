@@ -16,7 +16,7 @@
 #include "Sorts/DichoInser.c"
 #include "Sorts/Merge.c"
 #include "Sorts/QuickSort.c"
-#include "Sorts/BinaryTreeSort.c"
+#include "Sorts/BinaryTreeSort - struct.c"
 #include "Sorts/HeapSort.c"
 
 #include <stdio.h>  // printf
@@ -142,7 +142,7 @@
  * \def B_TREE
  * \brief argument waited for binary tree sorting algorithim.
  */
-#define B_TREE "BinaryTree"
+#define B_TREE_STRUCT "BinaryTree"
 /**
  * \def HEAP
  * \brief argument waited for heap sorting algorithim.
@@ -186,7 +186,7 @@ const size_t sizesTab[NB_SIZE_TO_TEST] = {SIZE1, SIZE2, SIZE3, SIZE4, SIZE5, SIZ
 
 // All the available algorithims
 const char* algos[9] = {BUBBLES, SEQUENTIAL_INS, SEQUENTIAL_INS_CHAINED, DICHO_INS, SELEC_PERM,
-						MERGE, QUICKSORT, B_TREE, HEAP};
+						MERGE, QUICKSORT, B_TREE_STRUCT, HEAP};
 
 // The name of the chosen algorithim
 char* chosenAlgo;
@@ -451,9 +451,9 @@ void chooseAlgo(const char* arg) {
 		chosenAlgo = MERGE;
 		algo = merge;
 	}
-	else if (strcmp(arg, B_TREE) == 0) {
-		chosenAlgo = B_TREE;
-		algo = bTreeSort;
+	else if (strcmp(arg, B_TREE_STRUCT) == 0) {
+		chosenAlgo = B_TREE_STRUCT;
+		algo = bTreeSort_Struct;
 	}
 	else if (strcmp(arg, HEAP) == 0) {
 		chosenAlgo = HEAP;

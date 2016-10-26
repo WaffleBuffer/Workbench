@@ -56,7 +56,7 @@ Induction : Prenons n' € N tel que n' > n >= 1.
 Par définition : C(inorder(n')) = 1 + 2 * C(inorder(n' - 1))
 Par hypothèse : C(inorder(n')) = 1 + 2 * H <------------------
 			      = 
-Donc La complexité de inorder € O().
+Donc La complexité de inorder € O(). <----------------
 
 -C(insert) :
 	Dans un premier cas 1.
@@ -68,7 +68,7 @@ Pour i = 0 : C(insert(i)) = 1, donc H2 vrai au rang 0.
 Induction : Prenons n' € N tel que n' > n >= 0.
 Par définition : C(insert(n')) = 1 + C(insert(n' - 1))
 Par hypothèse : C(insert(n')) = 1 + H2 <------------------
-Donc la complexité de insert € O().
+Donc la complexité de insert € O(). <----------------
 
 -Conclusion : 
-C(bTreeSort) = n * H + H2 € O()
+C(bTreeSort) = n * H + H2 € O() <----------------
