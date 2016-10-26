@@ -16,7 +16,7 @@
 #include "Sorts/DichoInser.c"
 #include "Sorts/Merge.c"
 #include "Sorts/QuickSort.c"
-#include "Sorts/BinaryTreeSort - struct.c"
+#include "Sorts/BinaryTreeSort - Struct.c"
 #include "Sorts/HeapSort.c"
 
 #include <stdio.h>  // printf
